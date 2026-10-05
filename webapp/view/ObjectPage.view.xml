@@ -1,0 +1,298 @@
+<mvc:View
+    id="objectPageView"
+    controllerName="vpaapproval.controller.ObjectPage"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:core="sap.ui.core"
+    displayBlock="true">
+
+    <f:DynamicPage
+        id="submissionDynamicPage"
+        showFooter="false">
+
+        <!-- ===================================================== -->
+        <!-- PAGE TITLE -->
+        <!-- ===================================================== -->
+
+        <f:title>
+
+            <f:DynamicPageTitle
+                id="submissionPageTitle">
+
+                <f:heading>
+
+                    <VBox
+                        id="pageHeadingBox">
+
+                        <Title
+                            id="referenceNumberTitle"
+                            text="{referenceNumber}"
+                            level="H1"/>
+
+                        <Text
+                            id="submissionRequestText"
+                            text="Submission Request"
+                            class="sapUiTinyMarginTop"/>
+
+                    </VBox>
+
+                </f:heading>
+
+
+                <!-- TOP ACTION BUTTONS -->
+
+                <f:actions>
+
+                    <Button
+                        id="rejectButton"
+                        text="Reject"
+                        icon="sap-icon://decline"
+                        type="Reject"
+                        press=".onReject"
+                        visible="{= ${status} === 'SUBMITTED' }"/>
+
+                    <Button
+                        id="approveButton"
+                        text="Approve"
+                        icon="sap-icon://accept"
+                        type="Accept"
+                        press=".onApprove"
+                        visible="{= ${status} === 'SUBMITTED' }"/>
+
+                </f:actions>
+
+            </f:DynamicPageTitle>
+
+        </f:title>
+
+
+        <!-- ===================================================== -->
+        <!-- HEADER -->
+        <!-- ===================================================== -->
+
+        <f:header>
+
+            <f:DynamicPageHeader
+                id="submissionDynamicHeader"
+                pinnable="true">
+
+                <HBox
+                    id="headerInformationRow"
+                    width="100%"
+                    wrap="Wrap"
+                    alignItems="Center"
+                    class="sapUiSmallMarginBottom">
+
+
+                    <!-- ================================================= -->
+                    <!-- STATUS COLUMN -->
+                    <!-- ================================================= -->
+
+                    <VBox
+                        id="headerStatusColumn"
+                        width="33.33%">
+
+                        <Label
+                            id="headerStatusLabel"
+                            text="Status"/>
+
+                        <ObjectStatus
+                            id="headerStatus"
+                            text="{= ${status} === 'SUBMITTED' ? 'Submitted' : ${status} === 'APPROVED' ? 'Approved' : ${status} === 'REJECTED' ? 'Rejected' : ${status} }"
+                            state="{= ${status} === 'SUBMITTED' ? 'Information' : ${status} === 'APPROVED' ? 'Success' : ${status} === 'REJECTED' ? 'Error' : 'None' }"
+                            icon="{= ${status} === 'APPROVED' ? 'sap-icon://accept' : ${status} === 'REJECTED' ? 'sap-icon://decline' : 'sap-icon://pending' }"
+                            class="sapUiTinyMarginTop"/>
+
+                    </VBox>
+
+
+                    <!-- ================================================= -->
+                    <!-- SUBMITTER COLUMN -->
+                    <!-- ================================================= -->
+
+                    <VBox
+                        id="headerSubmitterColumn"
+                        width="33.33%">
+
+                        <Label
+                            id="headerSubmitterLabel"
+                            text="Submitter"/>
+
+                        <Text
+                            id="headerSubmitterEmail"
+                            text="{submitterEmail}"
+                            class="sapUiTinyMarginTop"/>
+
+                    </VBox>
+
+
+                    <!-- ================================================= -->
+                    <!-- REFERENCE NUMBER COLUMN -->
+                    <!-- ================================================= -->
+
+                    <VBox
+                        id="headerReferenceNumberColumn"
+                        width="33.33%">
+
+                        <Label
+                            id="headerReferenceNumberLabel"
+                            text="Reference Number"/>
+
+                        <Text
+                            id="headerReferenceNumber"
+                            text="{referenceNumber}"
+                            class="sapUiTinyMarginTop"/>
+
+                    </VBox>
+
+                </HBox>
+
+            </f:DynamicPageHeader>
+
+        </f:header>
+
+
+        <!-- ===================================================== -->
+        <!-- MAIN CONTENT -->
+        <!-- ===================================================== -->
+
+        <f:content>
+
+            <VBox
+                id="objectPageContent"
+                width="100%">
+
+
+                <!-- ================================================= -->
+                <!-- SUBMISSION DETAILS -->
+                <!-- ================================================= -->
+
+                <Panel
+                    id="submissionDetailsPanel"
+                    headerText="Submission Details"
+                    expandable="false"
+                    width="100%"
+                    class="sapUiSmallMarginBottom">
+
+                    <content>
+
+                        <VBox
+                            id="submissionDetailsContent"
+                            width="100%"
+                            class="sapUiMediumMargin">
+
+
+                            <!-- ================================================= -->
+                            <!-- BASIC INFORMATION ROW -->
+                            <!-- ================================================= -->
+
+                            <HBox
+                                id="basicInformationRow"
+                                width="100%"
+                                wrap="Wrap"
+                                alignItems="Start">
+
+
+                                <!-- ================================================= -->
+                                <!-- REFERENCE NUMBER COLUMN -->
+                                <!-- ================================================= -->
+
+                                <VBox
+                                    id="detailsReferenceNumberColumn"
+                                    width="33.33%"
+                                    class="sapUiSmallMarginBottom">
+
+                                    <Label
+                                        id="detailsReferenceNumberLabel"
+                                        text="Reference Number"/>
+
+                                    <Text
+                                        id="detailsReferenceNumber"
+                                        text="{referenceNumber}"
+                                        class="sapUiTinyMarginTop"/>
+
+                                </VBox>
+
+
+                                <!-- ================================================= -->
+                                <!-- SUBMITTER COLUMN -->
+                                <!-- ================================================= -->
+
+                                <VBox
+                                    id="detailsSubmitterColumn"
+                                    width="33.33%"
+                                    class="sapUiSmallMarginBottom">
+
+                                    <Label
+                                        id="detailsSubmitterLabel"
+                                        text="Submitter Email"/>
+
+                                    <Text
+                                        id="detailsSubmitterEmail"
+                                        text="{submitterEmail}"
+                                        class="sapUiTinyMarginTop"/>
+
+                                </VBox>
+
+
+                                <!-- ================================================= -->
+                                <!-- STATUS COLUMN -->
+                                <!-- ================================================= -->
+
+                                <VBox
+                                    id="detailsStatusColumn"
+                                    width="33.33%"
+                                    class="sapUiSmallMarginBottom">
+
+                                    <Label
+                                        id="detailsStatusLabel"
+                                        text="Status"/>
+
+                                    <ObjectStatus
+                                        id="detailsStatus"
+                                        text="{= ${status} === 'SUBMITTED' ? 'Submitted' : ${status} === 'APPROVED' ? 'Approved' : ${status} === 'REJECTED' ? 'Rejected' : ${status} }"
+                                        state="{= ${status} === 'SUBMITTED' ? 'Information' : ${status} === 'APPROVED' ? 'Success' : ${status} === 'REJECTED' ? 'Error' : 'None' }"
+                                        icon="{= ${status} === 'APPROVED' ? 'sap-icon://accept' : ${status} === 'REJECTED' ? 'sap-icon://decline' : 'sap-icon://pending' }"
+                                        class="sapUiTinyMarginTop"/>
+
+                                </VBox>
+
+                            </HBox>
+
+
+                            <!-- ================================================= -->
+                            <!-- COMMENTS -->
+                            <!-- ================================================= -->
+
+                            <VBox
+                                id="commentsSection"
+                                width="100%"
+                                class="sapUiMediumMarginTop">
+
+                                <Label
+                                    id="commentsLabel"
+                                    text="Comments"/>
+
+                                <Text
+                                    id="commentsText"
+                                    text="{comments}"
+                                    wrapping="true"
+                                    width="100%"
+                                    class="sapUiTinyMarginTop"/>
+
+                            </VBox>
+
+                        </VBox>
+
+                    </content>
+
+                </Panel>
+
+            </VBox>
+
+        </f:content>
+
+    </f:DynamicPage>
+
+</mvc:View>

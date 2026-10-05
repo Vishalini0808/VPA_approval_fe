@@ -113,13 +113,24 @@
           "target": [
             "TargetView1"
           ]
-        }
+        },
+        {
+        "name": "RouteObjectPage",
+        "pattern": "ObjectPage/{ID}",
+        "target": [
+            "ObjectPage"
+        ]
+    }
       ],
       "targets": {
         "TargetView1": {
           "id": "View1",
           "name": "View1"
-        }
+        },
+         "ObjectPage": {
+        "id": "ObjectPage",
+        "name": "ObjectPage"
+    }
       }
     },
     "rootView": {
