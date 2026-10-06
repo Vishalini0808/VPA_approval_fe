@@ -3,81 +3,52 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageToast"
-], function (
-    Controller,
-    Filter,
-    FilterOperator,
-    MessageToast
-) {
+], function (Controller,Filter,FilterOperator,MessageToast) {
+
     "use strict";
 
     return Controller.extend("vpaapproval.controller.View1", {
 
-        // =========================================================
-        // INIT
-        // =========================================================
         onInit: function () {
-            console.log("===== VIEW1 CONTROLLER LOADED =====");
+            console.log(" VIEW1 CONTROLLER LOADED ");
         },
 
-
-        // =========================================================
-        // SEARCH
-        // =========================================================
         onSearch: function () {
 
             var oView = this.getView();
 
-            var sReferenceNumber = oView
-                .byId("referenceNumberInput")
-                .getValue()
-                .trim();
+            console.log('oView..........',oView)
 
-            var sSubmitterEmail = oView
-                .byId("submitterInput")
-                .getValue()
-                .trim();
+            var sReferenceNumber = oView.byId("referenceNumberInput").getValue().trim();
 
-            var sStatus = oView
-                .byId("statusSelect")
-                .getSelectedKey();
+            console.log('referencenumber value',sReferenceNumber)
+
+            var sSubmitterEmail = oView.byId("submitterInput").getValue().trim();
+
+            console.log("submitteremail",sSubmitterEmail);
+
+            var sStatus = oView .byId("statusSelect").getSelectedKey();
+
+            console.log('selected key value',sStatus)
 
             var aFilters = [];
-
-            // Reference Number filter
+            
             if (sReferenceNumber) {
-                aFilters.push(
-                    new Filter(
-                        "referenceNumber",
-                        FilterOperator.Contains,
-                        sReferenceNumber
-                    )
-                );
+                aFilters.push( new Filter("referenceNumber",FilterOperator.Contains,sReferenceNumber));
             }
 
-            // Submitter Email filter
-            if (sSubmitterEmail) {
-                aFilters.push(
-                    new Filter(
-                        "submitterEmail",
-                        FilterOperator.Contains,
-                        sSubmitterEmail
-                    )
-                );
+       
+            if (sSubmitterEmail) {  
+                
+                aFilters.push(new Filter( "submitterEmail",FilterOperator.Contains,sSubmitterEmail));
             }
 
-            // Status filter
+        
             if (sStatus && sStatus !== "ALL") {
-                aFilters.push(
-                    new Filter(
-                        "status",
-                        FilterOperator.EQ,
-                        sStatus
-                    )
-                );
-            }
 
-            // Get table binding
+                aFilters.push( new Filter("status",FilterOperator.EQ,sStatus));
+            }
+            
             var oTable = oView.byId("submissionTable");
             var oBinding = oTable.getBinding("items");
 
@@ -87,7 +58,7 @@ sap.ui.define([
                 return;
             }
 
-            // Apply filters
+    
             oBinding.filter(aFilters);
 
             console.log("Reference Number:", sReferenceNumber);
@@ -102,46 +73,34 @@ sap.ui.define([
             }
         },
 
-
-        // =========================================================
-        // CLEAR FILTERS
-        // =========================================================
         onClear: function () {
 
             var oView = this.getView();
 
-            // Clear Reference Number
-            oView
-                .byId("referenceNumberInput")
-                .setValue("");
+      
+            oView.byId("referenceNumberInput").setValue("");
 
-            // Clear Submitter Email
-            oView
-                .byId("submitterInput")
-                .setValue("");
+      
+            oView.byId("submitterInput").setValue("");
 
-            // Reset Status
-            oView
-                .byId("statusSelect")
-                .setSelectedKey("ALL");
+   
+            oView.byId("statusSelect").setSelectedKey("ALL");
 
-            // Clear table filters
+      
             var oTable = oView.byId("submissionTable");
             var oBinding = oTable.getBinding("items");
+
+            console.log('oBinding values',oBinding)
 
             if (oBinding) {
                 oBinding.filter([]);
             }
 
-            console.log("===== FILTERS CLEARED =====");
+            console.log(" FILTERS CLEARED ");
 
             MessageToast.show("Filters cleared");
         },
 
-
-        // =========================================================
-        // REFRESH
-        // =========================================================
         onRefresh: function () {
 
             var oTable = this.getView().byId("submissionTable");
@@ -154,19 +113,19 @@ sap.ui.define([
 
             oBinding.refresh();
 
-            console.log("===== TABLE REFRESHED =====");
+            console.log(" TABLE REFRESHED ");
 
             MessageToast.show("Submissions refreshed");
         },
 
 
-        // =========================================================
-        // ROW CLICK / NAVIGATION
-        // =========================================================
   onItemPress: function (oEvent) {
 
     var oSource = oEvent.getSource();
+    console.log('getsource value',oSource)
     var oContext = oSource.getBindingContext();
+
+    console.log('bindingcontext value',oContext);
 
     if (!oContext) {
         console.error("Binding context not found");
@@ -187,31 +146,18 @@ sap.ui.define([
         return;
     }
 
-    this.getOwnerComponent()
-        .getRouter()
-        .navTo("RouteObjectPage", {
-            ID: sID
-        });
+    this.getOwnerComponent().getRouter().navTo("RouteObjectPage", { ID: sID });
 }
 ,
-
-        // =========================================================
-        // MULTI SELECT
-        // =========================================================
         onSelectionChange: function (oEvent) {
 
             var oTable = this.getView().byId("submissionTable");
 
             var aSelectedItems = oTable.getSelectedItems();
 
-            console.log(
-                "===== SELECTION CHANGED ====="
-            );
+            console.log(   " SELECTION CHANGED");
 
-            console.log(
-                "Selected item count:",
-                aSelectedItems.length
-            );
+            console.log("Selected item count:",aSelectedItems.length);
 
             aSelectedItems.forEach(function (oItem) {
 
@@ -221,33 +167,21 @@ sap.ui.define([
 
                     var oData = oContext.getObject();
 
-                    console.log(
-                        "Selected submission:",
-                        oData
-                    );
+                    console.log( "Selected submission:",oData);
                 }
 
             });
 
             if (aSelectedItems.length > 0) {
-                MessageToast.show(
-                    aSelectedItems.length +
-                    " submission(s) selected"
-                );
+                MessageToast.show(aSelectedItems.length +" submission(s) selected");
             }
         },
 
-
-        // =========================================================
-        // BACK BUTTON
-        // =========================================================
         onNavBack: function () {
 
-            console.log("===== BACK BUTTON CLICKED =====");
+            console.log(" BACK BUTTON CLICKED ");
 
-            this.getOwnerComponent()
-                .getRouter()
-                .navTo("RouteView1");
+            this.getOwnerComponent()  .getRouter().navTo("RouteView1");
         }
 
     });

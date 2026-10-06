@@ -2,428 +2,235 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/m/MessageToast",
     "sap/m/MessageBox"
-], function (
-    Controller,
-    MessageToast,
-    MessageBox
-) {
+], function (Controller, MessageToast, MessageBox) {
     "use strict";
 
     return Controller.extend("vpaapproval.controller.ObjectPage", {
 
-        /* ===================================================== */
-        /* INIT */
-        /* ===================================================== */
-
         onInit: function () {
 
-            console.log(
-                "===== OBJECT PAGE CONTROLLER LOADED ====="
-            );
+            console.log("OBJECT PAGE CONTROLLER LOADED");
 
-            var oRouter =
-                this.getOwnerComponent().getRouter();
+            var oRouter = this.getOwnerComponent().getRouter();
 
-            oRouter
-                .getRoute("RouteObjectPage")
-                .attachPatternMatched(
-                    this._onObjectMatched,
-                    this
-                );
+            oRouter.getRoute("RouteObjectPage").attachPatternMatched(this._onObjectMatched, this);
         },
 
 
-        /* ===================================================== */
-        /* LOAD SELECTED SUBMISSION */
-        /* ===================================================== */
-
         _onObjectMatched: function (oEvent) {
 
-            var sID = oEvent
-                .getParameter("arguments")
-                .ID;
+            var sID = oEvent.getParameter("arguments").ID;
 
-            console.log(
-                "===== OBJECT PAGE MATCHED ====="
-            );
-
-            console.log(
-                "Selected ID:",
-                sID
-            );
-
+            console.log("OBJECT PAGE MATCHED");
+            console.log("Selected ID:", sID);
 
             if (!sID) {
 
-                MessageToast.show(
-                    "Submission ID not found"
-                );
+                MessageToast.show("Submission ID not found");
 
                 return;
             }
 
+            var sPath = "/Submissions(" + sID + ")";
 
-            /*
-             * OData V4 UUID
-             */
-
-            var sPath =
-                "/Submissions(" + sID + ")";
-
-
-            console.log(
-                "Binding path:",
-                sPath
-            );
-
+            console.log("Binding path:", sPath);
 
             this.getView().bindElement({
-
                 path: sPath,
 
                 events: {
 
                     dataRequested: function () {
 
-                        console.log(
-                            "Submission data requested"
-                        );
+                        console.log("Submission data requested");
 
                     },
 
-
                     dataReceived: function (oDataEvent) {
 
-                        console.log(
-                            "Submission data received"
-                        );
+                        console.log("Submission data received");
 
-
-                        if (
-                            oDataEvent.getParameter(
-                                "error"
-                            )
-                        ) {
+                        if (oDataEvent.getParameter("error")) {
 
                             console.error(
                                 "Error loading submission:",
-                                oDataEvent.getParameter(
-                                    "error"
-                                )
+                                oDataEvent.getParameter("error")
                             );
 
                             MessageToast.show(
                                 "Unable to load submission"
                             );
-
                         }
-
                     }
-
                 }
-
             });
-
         },
 
-
-        /* ===================================================== */
-        /* APPROVE */
-        /* ===================================================== */
 
         onApprove: function () {
 
-            console.log(
-                "===== APPROVE BUTTON CLICKED ====="
-            );
+            console.log("APPROVE BUTTON CLICKED");
 
+            var oContext = this.getView().getBindingContext();
 
-            var oContext =
-                this.getView().getBindingContext();
-
+            console.log('selected object',oContext)
 
             if (!oContext) {
 
-                MessageBox.error(
-                    "Submission data is not available."
-                );
+                MessageBox.error( "Submission data is not available.");
 
                 return;
             }
 
+            var oData = oContext.getObject();
 
-            var oData =
-                oContext.getObject();
-
-
-            console.log(
-                "Current submission:",
-                oData
-            );
-
-
-            /* Only SUBMITTED can be approved */
+            console.log("Current submission:",oData);
 
             if (oData.status !== "SUBMITTED") {
 
-                MessageToast.show(
-                    "Only submitted requests can be approved."
-                );
+                MessageBox.confirm("Only submitted requests can be approved.");
 
                 return;
             }
 
+            var sReferenceNumber = oData.referenceNumber;
 
-            var sReferenceNumber =
-                oData.referenceNumber;
-
-
-            MessageBox.confirm(
-
-                "Do you want to approve " +
-                sReferenceNumber +
-                "?",
-
+            MessageBox.confirm("Do you want to approve " + sReferenceNumber + "?",
                 {
-
                     title: "Approve Submission",
 
-                    actions: [
-                        MessageBox.Action.YES,
-                        MessageBox.Action.NO
-                    ],
+                    actions: [ MessageBox.Action.YES,MessageBox.Action.NO],
 
-                    emphasizedAction:
-                        MessageBox.Action.YES,
-
+                    emphasizedAction:MessageBox.Action.YES,
 
                     onClose: function (sAction) {
 
-                        if (
-                            sAction !==
-                            MessageBox.Action.YES
-                        ) {
+                        if (sAction !== MessageBox.Action.YES) 
+                        {
                             return;
                         }
 
+                        console.log( "CALLING approvePricing ACTION");
 
-                        console.log(
-                            "===== UPDATING STATUS TO APPROVED ====="
-                        );
+                        var oModel = this.getView().getModel();
+                        
+                        var oOperation = oModel.bindContext("/approvePricing(...)");
 
+                        oOperation.setParameter("referenceNumber", sReferenceNumber);
 
-                        /*
-                         * OData V4 PATCH
-                         *
-                         * SUBMITTED → APPROVED
-                         */
+                        oOperation.execute() .then(function (oResult) {
 
-                        oContext
-                            .setProperty(
-                                "status",
-                                "APPROVED"
-                            )
-                            .then(function () {
+                        console.log("approvePricing response:",  oResult);
 
-                                console.log(
-                                    "===== APPROVED SUCCESSFULLY ====="
-                                );
+                        MessageBox.confirm("Submission approved successfully");
 
+                        this.byId("approveButton").setVisible(false);
+                        this.byId("rejectButton").setVisible(false);
 
-                                MessageToast.show(
-                                    "Submission approved successfully"
-                                );
+                        oContext.requestRefresh();
 
+                        }).catch(function (oError) {
 
-                                /*
-                                 * Refresh the binding
-                                 * so UI immediately reflects
-                                 * the new status.
-                                 */
+                                console.error("approvePricing failed:",oError);
 
-                                oContext
-                                    .requestRefresh();
+                                MessageBox.error("Unable to approve submission.");
+                      });
 
-                            })
-                            .catch(function (oError) {
-
-                                console.error(
-                                    "Approve failed:",
-                                    oError
-                                );
-
-
-                                MessageBox.error(
-                                    "Unable to approve submission."
-                                );
-
-                            });
-
-                    }
-
+                    }.bind(this)
                 }
-
             );
-
         },
 
 
-        /* ===================================================== */
-        /* REJECT */
-        /* ===================================================== */
+  
 
         onReject: function () {
 
-            console.log(
-                "===== REJECT BUTTON CLICKED ====="
-            );
+            console.log("REJECT BUTTON CLICKED");
 
-
-            var oContext =
-                this.getView().getBindingContext();
-
+            var oContext =this.getView().getBindingContext();
 
             if (!oContext) {
 
-                MessageBox.error(
-                    "Submission data is not available."
-                );
+                MessageBox.error( "Submission data is not available.");
 
                 return;
             }
 
+            var oData = oContext.getObject();
 
-            var oData =
-                oContext.getObject();
-
-
-            console.log(
-                "Current submission:",
-                oData
-            );
-
-
-            /* Only SUBMITTED can be rejected */
+            console.log("Current submission:",oData);
 
             if (oData.status !== "SUBMITTED") {
 
-                MessageToast.show(
-                    "Only submitted requests can be rejected."
-                );
+                MessageBox.confirm( "Only submitted requests can be rejected.");
 
                 return;
             }
 
+            var sReferenceNumber = oData.referenceNumber;
+            
+            var sComments = oData.comments ||"Rejected by approver";
 
-            var sReferenceNumber =
-                oData.referenceNumber;
 
-
-            MessageBox.confirm(
-
-                "Do you want to reject " +
-                sReferenceNumber +
-                "?",
-
-                {
+            MessageBox.confirm("Do you want to reject " +sReferenceNumber +"?",{
 
                     title: "Reject Submission",
 
-                    actions: [
-                        MessageBox.Action.YES,
-                        MessageBox.Action.NO
-                    ],
+                    actions: [ MessageBox.Action.YES,MessageBox.Action.NO],
 
-                    emphasizedAction:
-                        MessageBox.Action.YES,
-
+                    emphasizedAction:MessageBox.Action.YES,
 
                     onClose: function (sAction) {
 
-                        if (
-                            sAction !==
-                            MessageBox.Action.YES
-                        ) {
+                        if ( sAction !==MessageBox.Action.YES  ) 
+                        {
                             return;
                         }
 
+                        console.log("CALLING rejectPricing ACTION");
 
-                        console.log(
-                            "===== UPDATING STATUS TO REJECTED ====="
-                        );
+                        var oModel = this.getView().getModel();
+                        
+                        var oOperation = oModel.bindContext("/rejectPricing(...)");
 
+                        oOperation.setParameter( "referenceNumber",sReferenceNumber );
 
-                        /*
-                         * OData V4 PATCH
-                         *
-                         * SUBMITTED → REJECTED
-                         */
+                        oOperation.setParameter("comments",sComments);
 
-                        oContext
-                            .setProperty(
-                                "status",
-                                "REJECTED"
-                            )
-                            .then(function () {
+                        oOperation.execute().then(function (oResult) {
 
-                                console.log(
-                                    "===== REJECTED SUCCESSFULLY ====="
-                                );
+                                console.log("rejectPricing response:", oResult );
+
+                                MessageToast.show("Submission rejected successfully" );
 
 
-                                MessageToast.show(
-                                    "Submission rejected successfully"
-                                );
+                                this.byId("approveButton").setVisible(false);
+                                this.byId("rejectButton").setVisible(false);
 
+                            
+                                oContext.requestRefresh();
 
-                                /*
-                                 * Refresh UI
-                                 */
+                            }) .catch(function (oError) {
 
-                                oContext
-                                    .requestRefresh();
+                                console.error("rejectPricing failed:",oError);
 
-                            })
-                            .catch(function (oError) {
-
-                                console.error(
-                                    "Reject failed:",
-                                    oError
-                                );
-
-
-                                MessageBox.error(
-                                    "Unable to reject submission."
-                                );
-
+                                MessageBox.error("Unable to reject submission.");
                             });
 
-                    }
-
+                    }.bind(this)
                 }
-
             );
-
         },
 
 
-        /* ===================================================== */
-        /* BACK */
-        /* ===================================================== */
 
         onNavBack: function () {
 
-            console.log(
-                "===== OBJECT PAGE BACK ====="
-            );
+            console.log("OBJECT PAGE BACK");
 
-
-            this.getOwnerComponent()
-                .getRouter()
-                .navTo("RouteView1");
-
+            this.getOwnerComponent().getRouter().navTo("RouteView1");
         }
 
     });
-
 });

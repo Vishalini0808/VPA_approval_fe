@@ -5,113 +5,64 @@
     xmlns:core="sap.ui.core"
     displayBlock="true">
 
-    <Page
-        id="approvalDashboardPage"
-        title="Approval Dashboard"
-        showNavButton="true"
-        navButtonPress=".onNavBack">
+    <Page  id="approvalDashboardPage" title="Approval Dashboard"  showNavButton="true"  navButtonPress=".onNavBack">
 
         <content>
 
-            <VBox
-                width="100%"
-                class="sapUiSmallMargin">
+            <VBox id="vboxs" width="100%"  class="sapUiSmallMargin">
 
-                <!-- Filter Section -->
-                <Panel
-                    id="filterPanel"
-                    headerText="Filters"
-                    expandable="true"
-                    expanded="true"
-                    class="sapUiSmallMarginBottom">
+             
+                <Panel id="filterPanel" headerText="Filters" expandable="true"  expanded="true" class="sapUiSmallMarginBottom">
 
                     <content>
 
-                        <HBox
-                            wrap="Wrap"
-                            alignItems="End"
-                            class="sapUiSmallMargin">
+                        <HBox id="hbox" wrap="Wrap" alignItems="End" class="sapUiSmallMargin">
 
-                            <!-- Reference Number -->
-                            <VBox class="sapUiSmallMarginEnd">
+                          
+                            <VBox id="vbox" class="sapUiSmallMarginEnd">
 
-                                <Label
-                                    text="Reference Number"/>
+                                <Label id="referencenumberInput" text="Reference Number"/>
 
-                                <Input
-                                    id="referenceNumberInput"
-                                    width="200px"
-                                    placeholder="Enter Reference Number"/>
+                                <Input id="referenceNumberInput" width="200px" placeholder="Enter Reference Number"/>
 
                             </VBox>
 
 
-                            <!-- Submitter Email -->
-                            <VBox class="sapUiSmallMarginEnd">
+                            <VBox id="Vbox" class="sapUiSmallMarginEnd">
 
-                                <Label
-                                    text="Submitter Email"/>
+                                <Label id="submitteremail"  text="Submitter Email"/>
 
-                                <Input
-                                    id="submitterInput"
-                                    width="200px"
-                                    placeholder="Enter Submitter Email"/>
+                                <Input  id="submitterInput" width="200px" placeholder="Enter Submitter Email"/>
 
                             </VBox>
 
 
-                            <!-- Status Filter -->
-                            <VBox class="sapUiSmallMarginEnd">
+                         
+                            <VBox id="VBox" class="sapUiSmallMarginEnd">
 
-                                <Label
-                                    text="Status"/>
+                                <Label id="statu" text="Status"/>
 
-                                <Select
-                                    id="statusSelect"
-                                    width="160px"
-                                    selectedKey="ALL">
+                                <Select id="statusSelect" width="160px" selectedKey="ALL">
 
                                     <items>
 
-                                        <core:Item
-                                            key="ALL"
-                                            text="All"/>
+                                        <core:Item id="all" key="ALL"  text="All"/>
 
-                                        <core:Item
-                                            key="SUBMITTED"
-                                            text="Submitted"/>
+                                        <core:Item id="sumbitted" key="SUBMITTED" text="Submitted"/>
 
-                                        <core:Item
-                                            key="APPROVED"
-                                            text="Approved"/>
+                                        <core:Item id="approved" key="APPROVED" text="Approved"/>
 
-                                        <core:Item
-                                            key="REJECTED"
-                                            text="Rejected"/>
+                                        <core:Item id="rejected" key="REJECTED" text="Rejected"/>
 
                                     </items>
 
                                 </Select>
 
                             </VBox>
-
-
-                            <!-- Search -->
-                            <Button
-                                id="searchButton"
-                                text="Search"
-                                icon="sap-icon://search"
-                                type="Emphasized"
-                                press=".onSearch"
-                                class="sapUiSmallMarginEnd"/>
-
-
-                            <!-- Clear -->
-                            <Button
-                                id="clearButton"
-                                text="Clear"
-                                icon="sap-icon://clear-filter"
-                                press=".onClear"/>
+                            
+                              <Button  id="searchButton" text="Search" icon="sap-icon://search"  type="Emphasized" press=".onSearch" class="sapUiSmallMarginEnd"/>
+                              
+                               <Button id="clearButton" text="Clear" icon="sap-icon://clear-filter"   press=".onClear"/>
 
                         </HBox>
 
@@ -120,35 +71,20 @@
                 </Panel>
 
 
-                <!-- Table Toolbar -->
-                <Toolbar>
+             
+                <Toolbar id="toolbar">
 
-                    <Title
-                        text="Submission Requests"
-                        level="H2"/>
+                    <Title id="submission"    text="{='Submission Requests ('+${/Submissions/$count} +')'}"   level="H2"/>
 
-                    <ToolbarSpacer/>
+                    <ToolbarSpacer id="toolspacer"/>
 
-                    <Button
-                        id="refreshButton"
-                        text="Refresh"
-                        icon="sap-icon://refresh"
-                        type="Transparent"
-                        press=".onRefresh"/>
+                    <Button id="refreshButton" text="Refresh" icon="sap-icon://refresh" type="Transparent"  press=".onRefresh"/>
 
                 </Toolbar>
 
 
-                <!-- Submission Table -->
-                <Table
-                    id="submissionTable"
-                    width="100%"
-                    inset="false"
-                    mode="MultiSelect"
-                    growing="true"
-                    growingThreshold="20"
-                    growingScrollToLoad="true"
-                    noDataText="No submissions found"
+          
+                <Table id="submissionTable"  width="100%"  inset="false" mode="MultiSelect" growing="true" growingThreshold="20" growingScrollToLoad="true"  noDataText="No submissions found"
                     items="{
                         path: '/Submissions'
                     }"
@@ -156,43 +92,32 @@
 
                     <columns>
 
-                        <!-- Reference Number -->
-                        <Column
-                            width="160px">
+                   
+                        <Column id="cloumn"  width="160px">
 
-                            <Text
-                                text="Reference Number"/>
+                            <Text id="reference"   text="Reference Number"/>
 
                         </Column>
 
 
-                        <!-- Comments -->
-                        <Column
-                            width="300px">
+                        <Column id="cloumns" width="300px">
 
-                            <Text
-                                text="Comments"/>
+                            <Text id="comment" text="Comments"/>
 
                         </Column>
 
 
-                        <!-- Submitter Email -->
-                        <Column
-                            width="160px">
+                     
+                        <Column id="email"  width="160px">
 
-                            <Text
-                                text="Submitter Email"/>
+                            <Text id="submitteremails" text="Submitter Email"/>
 
                         </Column>
 
 
-                        <!-- Status -->
-                        <Column
-                            width="130px"
-                            hAlign="Center">
+                        <Column id="center" width="130px" hAlign="Center">
 
-                            <Text
-                                text="Status"/>
+                            <Text id="status" text="Status"/>
 
                         </Column>
 
@@ -201,33 +126,24 @@
 
                     <items>
 
-                        <ColumnListItem
-                            type="Navigation"
-                            press=".onItemPress">
+                        <ColumnListItem id="navigation" type="Navigation"  press=".onItemPress">
 
                             <cells>
 
-                                <!-- Reference Number -->
-                                <Text
-                                    text="{referenceNumber}"
-                                    wrapping="false"/>
+                             
+                                <Text id="referencenumber" text="{referenceNumber}" wrapping="false"/>
 
 
-                                <!-- Comments -->
-                                <Text
-                                    text="{comments}"
-                                    wrapping="true"
-                                    maxLines="2"/>
+                             
+                                <Text id="comments" text="{comments}" wrapping="true" maxLines="2"/>
 
 
-                                <!-- Submitter Email -->
-                                <Text
-                                    text="{submitterEmail}"
-                                    wrapping="false"/>
+                             
+                                <Text id="emails"  text="{submitterEmail}"   wrapping="false"/>
 
 
-                                <!-- Status -->
-                                <ObjectStatus
+                         
+                                <ObjectStatus id="objectstatus"
                                     text="{= ${status} === 'SUBMITTED' ? 'Submitted' : ${status} === 'APPROVED' ? 'Approved' : ${status} === 'REJECTED' ? 'Rejected' : ${status} }"
                                     state="{= ${status} === 'SUBMITTED' ? 'Information' : ${status} === 'APPROVED' ? 'Success' : ${status} === 'REJECTED' ? 'Error' : 'None' }"/>
 
