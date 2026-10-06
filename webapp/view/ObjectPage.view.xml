@@ -8,6 +8,13 @@
     xmlns:l="sap.ui.layout"
     displayBlock="true">
 
+    <Page
+    id="objectPageContainer"
+    title=""
+    showNavButton="true"
+    navButtonPress=".onNavBack">
+
+
     <uxap:ObjectPageLayout id="submissionObjectPage" showTitleInHeaderContent="true" showHeaderContent="true" useIconTabBar="false" upperCaseAnchorBar="false" enableLazyLoading="false">
 
      <uxap:headerTitle>
@@ -15,17 +22,6 @@
             <uxap:ObjectPageDynamicHeaderTitle
                 id="submissionHeaderTitle">
 
-    <uxap:navigationActions>
-
-    <Button
-        id="backButton"
-        text="Back"
-        icon="sap-icon://nav-back"
-        type="Emphasized"
-        tooltip="Back"
-        press=".onNavBack"/>
-
-</uxap:navigationActions>
 
 
                 <uxap:expandedHeading>
@@ -275,4 +271,5 @@
 
     </uxap:ObjectPageLayout>
 
+</Page>
 </mvc:View>
