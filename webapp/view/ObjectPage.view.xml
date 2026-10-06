@@ -267,6 +267,132 @@
             </uxap:ObjectPageSection>
 
 
+   
+
+<uxap:ObjectPageSection id="pricingResultsSection"  title="Pricing Results">
+
+    <uxap:subSections>
+
+        <uxap:ObjectPageSubSection  id="pricingResultsSubSection" title="Pricing Results">
+
+            <uxap:blocks>
+
+                <Table id="pricingResultsTable"  width="100%" growing="true" growingThreshold="10" items="{pricingResults}">
+
+                    <headerToolbar>
+
+                        <Toolbar id="toolbars">
+
+                            <Title
+                                id="pricingResultsTitle"
+                                text="Pricing Results"/>
+
+                        </Toolbar>
+
+                    </headerToolbar>
+
+                    <columns>
+
+                        <Column id="modelColumn">
+                            <Text id="model" text="Model"/>
+                        </Column>
+
+                        <Column id="orderTypeColumn">
+                            <Text id="order type" text="Order Type"/>
+                        </Column>
+
+                        <Column id="regionColumn">
+                            <Text id="region" text="Region"/>
+                        </Column>
+
+                        <Column id="nspColumn"  hAlign="End">
+                            <Text id="nsp" text="NSP"/>
+                        </Column>
+
+                        <Column id="basicPriceColumn" hAlign="End">
+                            <Text id="basicprice" text="Basic Price"/>
+                        </Column>
+
+                        <Column id="exShowroomColumn"  hAlign="End">
+                            <Text id="exshowroom" text="Ex-Showroom"/>
+                        </Column>
+
+                        <Column id="insuranceColumn" hAlign="End">
+                            <Text id="Insurance" text="Insurance"/>
+                        </Column>
+
+                        <Column id="onRoadColumn" hAlign="End">
+                            <Text id="onroadprice" text="On-Road Price"/>
+                        </Column>
+
+                        <Column id="pricingStatusColumn">
+                            <Text id="Statu" text="Status"/>
+                        </Column>
+
+                    </columns>
+
+                    <items>
+
+                        <ColumnListItem
+                            id="pricingResultRow">
+
+                            <cells>
+
+                                <Text
+                                    id="modelText"
+                                    text="{model_modelCode}"/>
+
+                                <Text
+                                    id="orderTypeText"
+                                    text="{orderType}"/>
+
+                                <Text
+                                    id="regionText"
+                                    text="{region_regionCode}"/>
+
+                                <ObjectNumber
+                                    id="nspText"
+                                    number="{nspPrice}"/>
+
+                                <ObjectNumber
+                                    id="basicPriceText"
+                                    number="{basicPrice}"/>
+
+                                <ObjectNumber
+                                    id="exShowroomText"
+                                    number="{exShowroomPrice}"/>
+
+                                <ObjectNumber
+                                    id="insuranceText"
+                                    number="{totalInsurance}"/>
+
+                                <ObjectNumber
+                                    id="onRoadText"
+                                    number="{onRoadPrice}"/>
+
+                                <ObjectStatus
+                                    id="pricingStatus"
+                                    text="{status}"
+                                    state="{= ${status} === 'APPROVED' ? 'Success' : ${status} === 'REJECTED' ? 'Error' : 'Information' }"/>
+
+                            </cells>
+
+                        </ColumnListItem>
+
+                    </items>
+
+                </Table>
+
+            </uxap:blocks>
+
+        </uxap:ObjectPageSubSection>
+
+    </uxap:subSections>
+
+</uxap:ObjectPageSection>
+
+
+
         </uxap:sections>
 
     </uxap:ObjectPageLayout>
