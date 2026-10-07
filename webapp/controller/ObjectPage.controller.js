@@ -1,8 +1,9 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/m/MessageToast",
-    "sap/m/MessageBox"
-], function (Controller, MessageToast, MessageBox) {
+    "sap/m/MessageBox",
+    "sap/ui/model/json/JSONModel"
+], function (Controller, MessageToast, MessageBox, JSONModel) {
     "use strict";
 
     return Controller.extend("vpaapproval.controller.ObjectPage", {
@@ -10,12 +11,22 @@ sap.ui.define([
         onInit: function () {
 
             console.log("OBJECT PAGE CONTROLLER LOADED");
+            var oViewModel = new JSONModel({
+                orderType: "",
+                isMTS: false,
+                isEV: false,
+                isMTO: false,
+                isGEM: false,
+                isCSD: false,
+                isMtsEv: false
+            });
+
+            this.getView().setModel(oViewModel, "viewModel");
 
             var oRouter = this.getOwnerComponent().getRouter();
 
             oRouter.getRoute("RouteObjectPage").attachPatternMatched(this._onObjectMatched, this);
         },
-
 
         _onObjectMatched: function (oEvent) {
 
@@ -25,9 +36,7 @@ sap.ui.define([
             console.log("Selected ID:", sID);
 
             if (!sID) {
-
                 MessageToast.show("Submission ID not found");
-
                 return;
             }
 
@@ -36,36 +45,135 @@ sap.ui.define([
             console.log("Binding path:", sPath);
 
             this.getView().bindElement({
+
                 path: sPath,
 
                 events: {
 
                     dataRequested: function () {
-
                         console.log("Submission data requested");
-
                     },
 
-                    dataReceived: function (oDataEvent) {
+                    dataReceived: function () {
 
                         console.log("Submission data received");
 
-                        if (oDataEvent.getParameter("error")) {
+                        var oContext = this.getView().getBindingContext();
 
-                            console.error(
-                                "Error loading submission:",
-                                oDataEvent.getParameter("error")
-                            );
-
-                            MessageToast.show(
-                                "Unable to load submission"
-                            );
+                        if (!oContext) {
+                            console.error("No submission binding context");
+                            return;
                         }
-                    }
+
+                        var oModel = this.getView().getModel();
+
+                        var oPricingResultsBinding = oModel.bindList(
+                            "pricingResults",
+                            oContext
+                        );
+
+                        oPricingResultsBinding.requestContexts(0, 1000)
+                            .then(function (aContexts) {
+
+                                console.log(
+                                    "Pricing Result Contexts:",
+                                    aContexts
+                                );
+                                // Set table row count based on actual PricingResults
+                                var oTable = this.byId("pricingResultsTable");
+
+                                if (oTable && oTable.getRowMode()) {
+                                    oTable.getRowMode().setRowCount(aContexts.length);
+                                }
+
+                                if (!aContexts || aContexts.length === 0) {
+
+                                    console.log("No pricing results found");
+
+                                    this.getView()
+                                        .getModel("viewModel")
+                                        .setProperty("/orderType", "");
+
+                                    return;
+                                }
+
+                                var oPricingResult =
+                                    aContexts[0].getObject();
+
+                                console.log(
+                                    "Pricing Result:",
+                                    oPricingResult
+                                );
+
+                                var sOrderType =
+                                    oPricingResult.orderType;
+
+                                console.log(
+                                    "Order Type:",
+                                    sOrderType
+                                );
+
+                                var oViewModel =
+                                    this.getView()
+                                        .getModel("viewModel");
+
+                                oViewModel.setProperty(
+                                    "/orderType",
+                                    sOrderType
+                                );
+
+                                oViewModel.setProperty(
+                                    "/isMTS",
+                                    sOrderType === "MTS"
+                                );
+
+                                oViewModel.setProperty(
+                                    "/isEV",
+                                    sOrderType === "EV"
+                                );
+
+                                oViewModel.setProperty(
+                                    "/isMTO",
+                                    sOrderType === "MTO"
+                                );
+
+                                oViewModel.setProperty(
+                                    "/isGEM",
+                                    sOrderType === "GEM"
+                                );
+
+                                oViewModel.setProperty(
+                                    "/isCSD",
+                                    sOrderType === "CSD"
+                                );
+
+                                oViewModel.setProperty(
+                                    "/isMtsEv",
+                                    sOrderType === "MTS" ||
+                                    sOrderType === "EV"
+                                );
+
+                            }.bind(this))
+                            .catch(function (oError) {
+
+                                console.error(
+                                    "Unable to read pricingResults:",
+                                    oError
+                                );
+
+                            });
+                        var oSubmission = oContext.getObject();
+                        var bSubmitted = oSubmission.status === "SUBMITTED";
+
+                        this.byId("approveButton").setVisible(bSubmitted);
+                        this.byId("rejectButton").setVisible(bSubmitted);
+
+                    }.bind(this)
+
                 }
+
             });
         },
-
 
         onApprove: function () {
 
@@ -73,18 +181,18 @@ sap.ui.define([
 
             var oContext = this.getView().getBindingContext();
 
-            console.log('selected object',oContext)
+            console.log('selected object', oContext)
 
             if (!oContext) {
 
-                MessageBox.error( "Submission data is not available.");
+                MessageBox.error("Submission data is not available.");
 
                 return;
             }
 
             var oData = oContext.getObject();
 
-            console.log("Current submission:",oData);
+            console.log("Current submission:", oData);
 
             if (oData.status !== "SUBMITTED") {
 
@@ -99,42 +207,41 @@ sap.ui.define([
                 {
                     title: "Approve Submission",
 
-                    actions: [ MessageBox.Action.YES,MessageBox.Action.NO],
+                    actions: [MessageBox.Action.YES, MessageBox.Action.NO],
 
-                    emphasizedAction:MessageBox.Action.YES,
+                    emphasizedAction: MessageBox.Action.YES,
 
                     onClose: function (sAction) {
 
-                        if (sAction !== MessageBox.Action.YES) 
-                        {
+                        if (sAction !== MessageBox.Action.YES) {
                             return;
                         }
 
-                        console.log( "CALLING approvePricing ACTION");
+                        console.log("CALLING approvePricing ACTION");
 
                         var oModel = this.getView().getModel();
-                        
+
                         var oOperation = oModel.bindContext("/approvePricing(...)");
 
                         oOperation.setParameter("referenceNumber", sReferenceNumber);
 
-                        oOperation.execute() .then(function (oResult) {
+                        oOperation.execute().then(function (oResult) {
 
-                        console.log("approvePricing response:",  oResult);
+                            console.log("approvePricing response:", oResult);
 
-                        MessageBox.confirm("Submission approved successfully");
+                            MessageBox.confirm("Submission approved successfully");
 
-                        this.byId("approveButton").setVisible(false);
-                        this.byId("rejectButton").setVisible(false);
+                            this.byId("approveButton").setVisible(false);
+                            this.byId("rejectButton").setVisible(false);
 
-                        oContext.requestRefresh();
+                            oContext.requestRefresh();
 
                         }).catch(function (oError) {
 
-                                console.error("approvePricing failed:",oError);
+                            console.error("approvePricing failed:", oError);
 
-                                MessageBox.error("Unable to approve submission.");
-                      });
+                            MessageBox.error("Unable to approve submission.");
+                        });
 
                     }.bind(this)
                 }
@@ -142,84 +249,83 @@ sap.ui.define([
         },
 
 
-  
+
 
         onReject: function () {
 
             console.log("REJECT BUTTON CLICKED");
 
-            var oContext =this.getView().getBindingContext();
+            var oContext = this.getView().getBindingContext();
 
             if (!oContext) {
 
-                MessageBox.error( "Submission data is not available.");
+                MessageBox.error("Submission data is not available.");
 
                 return;
             }
 
             var oData = oContext.getObject();
 
-            console.log("Current submission:",oData);
+            console.log("Current submission:", oData);
 
             if (oData.status !== "SUBMITTED") {
 
-                MessageBox.confirm( "Only submitted requests can be rejected.");
+                MessageBox.confirm("Only submitted requests can be rejected.");
 
                 return;
             }
 
             var sReferenceNumber = oData.referenceNumber;
-            
-            var sComments = oData.comments ||"Rejected by approver";
+
+            var sComments = oData.comments || "Rejected by approver";
 
 
-            MessageBox.confirm("Do you want to reject " +sReferenceNumber +"?",{
+            MessageBox.confirm("Do you want to reject " + sReferenceNumber + "?", {
 
-                    title: "Reject Submission",
+                title: "Reject Submission",
 
-                    actions: [ MessageBox.Action.YES,MessageBox.Action.NO],
+                actions: [MessageBox.Action.YES, MessageBox.Action.NO],
 
-                    emphasizedAction:MessageBox.Action.YES,
+                emphasizedAction: MessageBox.Action.YES,
 
-                    onClose: function (sAction) {
+                onClose: function (sAction) {
 
-                        if ( sAction !==MessageBox.Action.YES  ) 
-                        {
-                            return;
-                        }
+                    if (sAction !== MessageBox.Action.YES) {
+                        return;
+                    }
 
-                        console.log("CALLING rejectPricing ACTION");
+                    console.log("CALLING rejectPricing ACTION");
 
-                        var oModel = this.getView().getModel();
-                        
-                        var oOperation = oModel.bindContext("/rejectPricing(...)");
+                    var oModel = this.getView().getModel();
 
-                        oOperation.setParameter( "referenceNumber",sReferenceNumber );
+                    var oOperation = oModel.bindContext("/rejectPricing(...)");
 
-                        oOperation.setParameter("comments",sComments);
+                    oOperation.setParameter("referenceNumber", sReferenceNumber);
 
-                        oOperation.execute().then(function (oResult) {
+                    oOperation.setParameter("comments", sComments);
 
-                                console.log("rejectPricing response:", oResult );
+                    oOperation.execute().then(function (oResult) {
 
-                                MessageToast.show("Submission rejected successfully" );
+                        console.log("rejectPricing response:", oResult);
+
+                        MessageToast.show("Submission rejected successfully");
 
 
-                                this.byId("approveButton").setVisible(false);
-                                this.byId("rejectButton").setVisible(false);
+                        this.byId("approveButton").setVisible(false);
+                        this.byId("rejectButton").setVisible(false);
 
-                            
-                                oContext.requestRefresh();
 
-                            }) .catch(function (oError) {
+                        oContext.requestRefresh();
 
-                                console.error("rejectPricing failed:",oError);
+                    }).catch(function (oError) {
 
-                                MessageBox.error("Unable to reject submission.");
-                            });
+                        console.error("rejectPricing failed:", oError);
 
-                    }.bind(this)
-                }
+                        MessageBox.error("Unable to reject submission.");
+                    });
+
+                }.bind(this)
+            }
             );
         },
 
