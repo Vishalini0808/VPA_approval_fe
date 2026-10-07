@@ -1,401 +1,1399 @@
 <mvc:View
     id="objectPageView"
     controllerName="vpaapproval.controller.ObjectPage"
-    xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m"
-    xmlns:core="sap.ui.core"
-    xmlns:uxap="sap.uxap"
-    xmlns:l="sap.ui.layout"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:uxap="sap.uxap"
+	xmlns:l="sap.ui.layout"
+    xmlns:table="sap.ui.table"
+    xmlns:rowmodes="sap.ui.table.rowmodes"
     displayBlock="true">
-
-    <Page
+	<Page
     id="objectPageContainer"
     title=""
+    class="submissionObjectPage"
     showNavButton="true"
     navButtonPress=".onNavBack">
-
-
-    <uxap:ObjectPageLayout id="submissionObjectPage" showTitleInHeaderContent="true" showHeaderContent="true" useIconTabBar="false" upperCaseAnchorBar="false" enableLazyLoading="false">
-
-     <uxap:headerTitle>
-
-            <uxap:ObjectPageDynamicHeaderTitle
+		<uxap:ObjectPageLayout id="submissionObjectPage" showTitleInHeaderContent="true" showHeaderContent="true" useIconTabBar="false" upperCaseAnchorBar="false" enableLazyLoading="false"   class="submissionObjectLayout">
+			<uxap:headerTitle>
+				<uxap:ObjectPageDynamicHeaderTitle
                 id="submissionHeaderTitle">
-
-
-
-                <uxap:expandedHeading>
-
-                    <VBox id="expandedHeadingBox">
-
-                        <Title
+					<uxap:expandedHeading>
+						<VBox id="expandedHeadingBox">
+							<Title
                             id="referenceNumberTitle"
                             text="{referenceNumber}"
                             level="H1"/>
-
-                        <Text
+							<Text
                             id="submissionRequestText"
-                            text="Submission Request"
+                            text="{pricingResults/0/orderType} Pricing"
                             class="sapUiTinyMarginTop"/>
-
-                    </VBox>
-
-                </uxap:expandedHeading>
-
-
-    
-
-                <uxap:snappedHeading>
-
-                    <Title
+						</VBox>
+					</uxap:expandedHeading>
+					<uxap:snappedHeading>
+						<Title
                         id="snappedReferenceNumberTitle"
                         text="{referenceNumber}"
                         level="H2"/>
-
-                </uxap:snappedHeading>
-
-
-          
-        <uxap:actions>
-
-  
-    <Button
-        id="approveButton"
-        text="Approve"
-        icon="sap-icon://accept"
-        type="Accept"
-        press=".onApprove"
-        visible="{= ${status} === 'SUBMITTED' }"/>
-
-
-    <Button
-        id="rejectButton"
-        text="Reject"
-        icon="sap-icon://decline"
-        type="Reject"
-        press=".onReject"
-        visible="{= ${status} === 'SUBMITTED' }"/>
-
-</uxap:actions>
-
-            </uxap:ObjectPageDynamicHeaderTitle>
-
-        </uxap:headerTitle>
-
-
-
-        <uxap:headerContent>
-
-            <l:Grid
+					</uxap:snappedHeading>
+					<uxap:actions>
+						<Button
+                            id="approveButton"
+                            text="Approve"
+                            icon="sap-icon://accept"
+                            type="Accept"
+                            press=".onApprove"/>
+                        <Button
+                            id="rejectButton"
+                            text="Reject"
+                            icon="sap-icon://decline"
+                            type="Reject"
+                            press=".onReject"/>
+					</uxap:actions>
+				</uxap:ObjectPageDynamicHeaderTitle>
+			</uxap:headerTitle>
+			<!-- <uxap:headerContent><l:Grid
                 id="headerInformationGrid"
                 width="100%"
                 defaultSpan="L4 M6 S12"
                 hSpacing="2"
-                vSpacing="1">
-
- 
-
-                <VBox
+                vSpacing="1"><VBox
                     id="headerStatusColumn"
-                    class="sapUiSmallMarginBottom">
-
-                    <Label
+                    class="sapUiSmallMarginBottom"><Label
                         id="headerStatusLabel"
-                        text="Status"/>
-
-                    <ObjectStatus
+                        text="Status"/><ObjectStatus
                         id="headerStatus"
                         text="{= ${status} === 'SUBMITTED' ? 'Submitted' : ${status} === 'APPROVED' ? 'Approved' : ${status} === 'REJECTED' ? 'Rejected' : ${status} }"
                         state="{= ${status} === 'SUBMITTED' ? 'Information' : ${status} === 'APPROVED' ? 'Success' : ${status} === 'REJECTED' ? 'Error' : 'None' }"
                         icon="{= ${status} === 'APPROVED' ? 'sap-icon://accept' : ${status} === 'REJECTED' ? 'sap-icon://decline' : 'sap-icon://pending' }"
-                        class="sapUiSmallMarginTop"/>
-
-                </VBox>
-
-
-
-                <VBox
+                        class="sapUiSmallMarginTop"/></VBox><VBox
                     id="headerSubmitterColumn"
-                    class="sapUiSmallMarginBottom">
-
-                    <Label
+                    class="sapUiSmallMarginBottom"><Label
                         id="headerSubmitterLabel"
-                        text="Submitter"/>
-
-                    <Text
+                        text="Submitter"/><Text
                         id="headerSubmitterEmail"
                         text="{submitterEmail}"
-                        class="sapUiSmallMarginTop"/>
-
-                </VBox>
-
-
-
-                <VBox
+                        class="sapUiSmallMarginTop"/></VBox><VBox
                     id="headerReferenceNumberColumn"
-                    class="sapUiSmallMarginBottom">
-
-                    <Label
+                    class="sapUiSmallMarginBottom"><Label
                         id="headerReferenceNumberLabel"
-                        text="Reference Number"/>
-
-                    <Text
+                        text="Reference Number"/><Text
                         id="headerReferenceNumber"
                         text="{referenceNumber}"
-                        class="sapUiSmallMarginTop"/>
-
-                </VBox>
-
-            </l:Grid>
-
-        </uxap:headerContent>
-
-
-
-        <uxap:sections>
-
-
-     
-            <uxap:ObjectPageSection
-                id="submissionDetailsSection"
-                title="Submission Details">
-
-                <uxap:subSections>
-
-                    <uxap:ObjectPageSubSection
-                        id="submissionDetailsSubSection">
-
-                        <uxap:blocks>
-
-                            <VBox
+                        class="sapUiSmallMarginTop"/></VBox></l:Grid></uxap:headerContent> -->
+			<uxap:sections>
+				<uxap:ObjectPageSection id="submissionDetailsSection" class="submissionDetailsSection">
+					<uxap:subSections>
+						<uxap:ObjectPageSubSection
+                        id="submissionDetailsSubSection"
+                         title="Submission Details">
+							<uxap:blocks>
+								<VBox
                                 id="submissionDetailsContainer"
-                                width="100%"
-                                class="sapUiMediumMarginBeginEnd sapUiSmallMarginTop sapUiSmallMarginBottom">
-
-                                <l:Grid
+                                width="100%">
+									<l:Grid
                                     id="submissionDetailsGrid"
                                     width="100%"
                                     defaultSpan="L3 M6 S12"
                                     hSpacing="2"
                                     vSpacing="2">
-
-
-
-                                    <VBox
-                                        id="detailsReferenceNumberColumn"
-                                        class="sapUiSmallMarginBottom">
-
-                                        <Label
+										<VBox
+                                        id="detailsReferenceNumberColumn">
+											<Label
                                             id="detailsReferenceNumberLabel"
                                             text="Reference Number"/>
-
-                                        <Text
+											<Text
                                             id="detailsReferenceNumber"
-                                            text="{referenceNumber}"
-                                            class="sapUiSmallMarginTop"/>
-
-                                    </VBox>
-
-
-
-                                    <VBox
-                                        id="detailsSubmitterColumn"
-                                        class="sapUiSmallMarginBottom">
-
-                                        <Label
+                                            text="{referenceNumber}"/>
+										</VBox>
+										<VBox
+                                        id="detailsSubmitterColumn">
+											<Label
                                             id="detailsSubmitterLabel"
                                             text="Submitter Email"/>
-
-                                        <Text
+											<Text
                                             id="detailsSubmitterEmail"
-                                            text="{submitterEmail}"
-                                            class="sapUiSmallMarginTop"/>
-
-                                    </VBox>
-
-
-                        
-
-                                    <VBox
-                                        id="detailsStatusColumn"
-                                        class="sapUiSmallMarginBottom">
-
-                                        <Label
+                                            text="{submitterEmail}"/>
+										</VBox>
+										<VBox
+                                        id="detailsStatusColumn">
+											<Label
                                             id="detailsStatusLabel"
                                             text="Status"/>
-
-                                        <ObjectStatus
+											<ObjectStatus
                                             id="detailsStatus"
                                             text="{= ${status} === 'SUBMITTED' ? 'Submitted' : ${status} === 'APPROVED' ? 'Approved' : ${status} === 'REJECTED' ? 'Rejected' : ${status} }"
                                             state="{= ${status} === 'SUBMITTED' ? 'Information' : ${status} === 'APPROVED' ? 'Success' : ${status} === 'REJECTED' ? 'Error' : 'None' }"
                                             icon="{= ${status} === 'APPROVED' ? 'sap-icon://accept' : ${status} === 'REJECTED' ? 'sap-icon://decline' : 'sap-icon://pending' }"
-                                            class="sapUiSmallMarginTop"/>
-
-                                    </VBox>
-
-
-                                    <!-- Comments -->
-
-                                    <VBox
-                                        id="detailsCommentsColumn"
-                                        class="sapUiSmallMarginBottom">
-
-                                        <Label
+                                            />
+										</VBox>
+										<!-- Comments -->
+										<VBox
+                                        id="detailsCommentsColumn">
+											<Label
                                             id="detailsCommentsLabel"
                                             text="Comments"/>
-
-                                        <Text
+											<Text
                                             id="detailsComments"
                                             text="{comments}"
                                             wrapping="true"
-                                            width="100%"
-                                            class="sapUiSmallMarginTop"/>
+                                            width="100%"/>
+										</VBox>
+									</l:Grid>
+								</VBox>
+							</uxap:blocks>
+						</uxap:ObjectPageSubSection>
+					</uxap:subSections>
+				</uxap:ObjectPageSection>
+				<uxap:ObjectPageSection id="pricingResultsSection" >
+					<uxap:subSections>
+						<uxap:ObjectPageSubSection  id="pricingResultsSubSection" title="Pricing Results">
+							<uxap:blocks>
+								<table:Table
+                                    id="pricingResultsTable"
+                                    class="pricingResultsTable"
+                                    width="100%"
+                                    rows="{pricingResults}"
+                                    selectionMode="None"
+                                    alternateRowColors="true">
+                                     <table:rowMode>
+                                        <rowmodes:Fixed/>
+                                    </table:rowMode>
 
-                                    </VBox>
+                                    <!-- ===================================================== -->
+                                    <!-- HEADER                                                -->
+                                    <!-- ===================================================== -->
 
+                                    <table:extension>
 
-                                </l:Grid>
+                                        <Toolbar id="pricingResultsToolbar">
 
-                            </VBox>
+                                            <Title
+                                                id="pricingResultsTitle"
+                                                text="Submitted Pricing"/>
 
-                        </uxap:blocks>
+                                        </Toolbar>
 
-                    </uxap:ObjectPageSubSection>
-
-                </uxap:subSections>
-
-            </uxap:ObjectPageSection>
-
-
-   
-
-<uxap:ObjectPageSection id="pricingResultsSection"  title="Pricing Results">
-
-    <uxap:subSections>
-
-        <uxap:ObjectPageSubSection  id="pricingResultsSubSection" title="Pricing Results">
-
-            <uxap:blocks>
-
-                <Table id="pricingResultsTable"  width="100%" growing="true" growingThreshold="10" items="{pricingResults}">
-
-                    <headerToolbar>
-
-                        <Toolbar id="toolbars">
-
-                            <Title
-                                id="pricingResultsTitle"
-                                text="Pricing Results"/>
-
-                        </Toolbar>
-
-                    </headerToolbar>
-
-                    <columns>
-
-                        <Column id="modelColumn">
-                            <Text id="model" text="Model"/>
-                        </Column>
-
-                        <Column id="orderTypeColumn">
-                            <Text id="order type" text="Order Type"/>
-                        </Column>
-
-                        <Column id="regionColumn">
-                            <Text id="region" text="Region"/>
-                        </Column>
-
-                        <Column id="nspColumn"  hAlign="End">
-                            <Text id="nsp" text="NSP"/>
-                        </Column>
-
-                        <Column id="basicPriceColumn" hAlign="End">
-                            <Text id="basicprice" text="Basic Price"/>
-                        </Column>
-
-                        <Column id="exShowroomColumn"  hAlign="End">
-                            <Text id="exshowroom" text="Ex-Showroom"/>
-                        </Column>
-
-                        <Column id="insuranceColumn" hAlign="End">
-                            <Text id="Insurance" text="Insurance"/>
-                        </Column>
-
-                        <Column id="onRoadColumn" hAlign="End">
-                            <Text id="onroadprice" text="On-Road Price"/>
-                        </Column>
-
-                        <Column id="pricingStatusColumn">
-                            <Text id="Statu" text="Status"/>
-                        </Column>
-
-                    </columns>
-
-                    <items>
-
-                        <ColumnListItem
-                            id="pricingResultRow">
-
-                            <cells>
-
-                                <Text
-                                    id="modelText"
-                                    text="{model_modelCode}"/>
-
-                                <Text
-                                    id="orderTypeText"
-                                    text="{orderType}"/>
-
-                                <Text
-                                    id="regionText"
-                                    text="{region_regionCode}"/>
-
-                                <ObjectNumber
-                                    id="nspText"
-                                    number="{nspPrice}"/>
-
-                                <ObjectNumber
-                                    id="basicPriceText"
-                                    number="{basicPrice}"/>
-
-                                <ObjectNumber
-                                    id="exShowroomText"
-                                    number="{exShowroomPrice}"/>
-
-                                <ObjectNumber
-                                    id="insuranceText"
-                                    number="{totalInsurance}"/>
-
-                                <ObjectNumber
-                                    id="onRoadText"
-                                    number="{onRoadPrice}"/>
-
-                                <ObjectStatus
-                                    id="pricingStatus"
-                                    text="{status}"
-                                    state="{= ${status} === 'APPROVED' ? 'Success' : ${status} === 'REJECTED' ? 'Error' : 'Information' }"/>
-
-                            </cells>
-
-                        </ColumnListItem>
-
-                    </items>
-
-                </Table>
-
-            </uxap:blocks>
-
-        </uxap:ObjectPageSubSection>
-
-    </uxap:subSections>
-
-</uxap:ObjectPageSection>
+                                    </table:extension>
 
 
+                                    <!-- ===================================================== -->
+                                    <!-- COMMON : MODEL                                       -->
+                                    <!-- ===================================================== -->
 
-        </uxap:sections>
+                                    <table:Column
+                                        id="modelColumn"
+                                        width="160px">
 
-    </uxap:ObjectPageLayout>
+                                        <Label
+                                            id="modelLabel"
+                                            text="Model"/>
 
-</Page>
+                                        <table:template>
+
+                                            <Text
+                                                id="modelText"
+                                                text="{model_modelCode}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <!-- ===================================================== -->
+                                    <!-- COMMON : ORDER TYPE                                  -->
+                                    <!-- ===================================================== -->
+
+                                    <table:Column
+                                        id="orderTypeColumn"
+                                        width="110px">
+
+                                        <Label
+                                            id="orderTypeLabel"
+                                            text="Order Type"/>
+
+                                        <table:template>
+
+                                            <Text
+                                                id="orderTypeText"
+                                                text="{orderType}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <!-- ===================================================== -->
+                                    <!-- COMMON : REGION                                      -->
+                                    <!-- ===================================================== -->
+
+                                    <table:Column
+                                        id="regionColumn"
+                                        width="100px">
+
+                                        <Label
+                                            id="regionLabel"
+                                            text="Region"/>
+
+                                        <table:template>
+
+                                            <Text
+                                                id="regionText"
+                                                text="{region_regionCode}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <!-- ===================================================== -->
+                                    <!-- MTS / EV                                             -->
+                                    <!-- ===================================================== -->
+
+                                    <table:Column
+                                        id="inputNspColumn"
+                                        width="120px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'MTS' ||
+                                                    ${viewModel>/orderType} === 'EV' }">
+
+                                        <Label
+                                            id="inputNspLabel"
+                                            text="Input NSP"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="inputNspText"
+                                                number="{inputNSP}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="helmetColumn"
+                                        width="100px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'MTS' ||
+                                                    ${viewModel>/orderType} === 'EV' }">
+
+                                        <Label
+                                            id="helmetLabel"
+                                            text="Helmet"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="helmetText"
+                                                number="{helmet}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="transportationColumn"
+                                        width="130px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'MTS' ||
+                                                    ${viewModel>/orderType} === 'EV' }">
+
+                                        <Label
+                                            id="transportationLabel"
+                                            text="Transportation"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="transportationText"
+                                                number="{transportation}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="otherExpensesColumn"
+                                        width="130px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'MTS' ||
+                                                    ${viewModel>/orderType} === 'EV' }">
+
+                                        <Label
+                                            id="otherExpensesLabel"
+                                            text="Other Expenses"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="otherExpensesText"
+                                                number="{otherExpenses}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="actualNspColumn"
+                                        width="120px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'MTS' ||
+                                                    ${viewModel>/orderType} === 'EV' }">
+
+                                        <Label
+                                            id="actualNspLabel"
+                                            text="Actual NSP"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="actualNspText"
+                                                number="{actualNSP}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="dealerCostColumn"
+                                        width="120px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'MTS' ||
+                                                    ${viewModel>/orderType} === 'EV' }">
+
+                                        <Label
+                                            id="dealerCostLabel"
+                                            text="Dealer Cost"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="dealerCostText"
+                                                number="{dealerCost}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="ndpColumn"
+                                        width="110px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'MTS' ||
+                                                    ${viewModel>/orderType} === 'EV' }">
+
+                                        <Label
+                                            id="ndpLabel"
+                                            text="NDP"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="ndpText"
+                                                number="{ndp}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="dealerMarginColumn"
+                                        width="130px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'MTS' ||
+                                                    ${viewModel>/orderType} === 'EV' }">
+
+                                        <Label
+                                            id="dealerMarginLabel"
+                                            text="Dealer Margin"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="dealerMarginText"
+                                                number="{dealerMargin}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="totalDealerMarginColumn"
+                                        width="150px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'MTS' ||
+                                                    ${viewModel>/orderType} === 'EV' }">
+
+                                        <Label
+                                            id="totalDealerMarginLabel"
+                                            text="Total Dealer Margin"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="totalDealerMarginText"
+                                                number="{totalDealerMargin}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="basicPriceColumn"
+                                        width="120px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'MTS' ||
+                                                    ${viewModel>/orderType} === 'EV' }">
+
+                                        <Label
+                                            id="basicPriceLabel"
+                                            text="Basic Price"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="basicPriceText"
+                                                number="{basicPrice}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="gstAmountColumn"
+                                        width="110px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'MTS' ||
+                                                    ${viewModel>/orderType} === 'EV' }">
+
+                                        <Label
+                                            id="gstAmountLabel"
+                                            text="GST Amount"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="gstAmountText"
+                                                number="{gstAmount}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="exShowroomColumn"
+                                        width="130px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'MTS' ||
+                                                    ${viewModel>/orderType} === 'EV' }">
+
+                                        <Label
+                                            id="exShowroomLabel"
+                                            text="Ex-Showroom"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="exShowroomText"
+                                                number="{exShowroomPrice}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="rtoPercentColumn"
+                                        width="90px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'MTS' ||
+                                                    ${viewModel>/orderType} === 'EV' }">
+
+                                        <Label
+                                            id="rtoPercentLabel"
+                                            text="RTO %"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="rtoPercentText"
+                                                number="{rtoPercent}"
+                                                unit="%"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="rtoAmountColumn"
+                                        width="110px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'MTS' ||
+                                                    ${viewModel>/orderType} === 'EV' }">
+
+                                        <Label
+                                            id="rtoAmountLabel"
+                                            text="RTO Amount"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="rtoAmountText"
+                                                number="{rtoAmount}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="rtoWithBillColumn"
+                                        width="120px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'MTS' ||
+                                                    ${viewModel>/orderType} === 'EV' }">
+
+                                        <Label
+                                            id="rtoWithBillLabel"
+                                            text="RTO With Bill"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="rtoWithBillText"
+                                                number="{rtoWithBill}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="insuranceRateColumn"
+                                        width="120px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'MTS' ||
+                                                    ${viewModel>/orderType} === 'EV' }">
+
+                                        <Label
+                                            id="insuranceRateLabel"
+                                            text="Insurance Rate"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="insuranceRateText"
+                                                number="{insuranceRate}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="insuranceAmountColumn"
+                                        width="140px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'MTS' ||
+                                                    ${viewModel>/orderType} === 'EV' }">
+
+                                        <Label
+                                            id="insuranceAmountLabel"
+                                            text="Insurance Amount"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="insuranceAmountText"
+                                                number="{insuranceAmount}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="tpaPaColumn"
+                                        width="100px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'MTS' ||
+                                                    ${viewModel>/orderType} === 'EV' }">
+
+                                        <Label
+                                            id="tpaPaLabel"
+                                            text="TPA / PA"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="tpaPaText"
+                                                number="{tpaPa}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="insuranceGstColumn"
+                                        width="120px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'MTS' ||
+                                                    ${viewModel>/orderType} === 'EV' }">
+
+                                        <Label
+                                            id="insuranceGstLabel"
+                                            text="Insurance GST"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="insuranceGstText"
+                                                number="{insuranceGst}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="totalInsuranceColumn"
+                                        width="130px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'MTS' ||
+                                                    ${viewModel>/orderType} === 'EV' }">
+
+                                        <Label
+                                            id="totalInsuranceLabel"
+                                            text="Total Insurance"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="totalInsuranceText"
+                                                number="{totalInsurance}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="onRoadColumn"
+                                        width="130px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'MTS' ||
+                                                    ${viewModel>/orderType} === 'EV' }">
+
+                                        <Label
+                                            id="onRoadLabel"
+                                            text="On-Road Price"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="onRoadText"
+                                                number="{onRoadPrice}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <!-- ===================================================== -->
+                                    <!-- MTO                                                   -->
+                                    <!-- ===================================================== -->
+
+                                    <table:Column
+                                        id="referenceMtsModelColumn"
+                                        width="170px"
+                                        visible="{= ${viewModel>/orderType} === 'MTO' }">
+
+                                        <Label
+                                            id="referenceMtsModelLabel"
+                                            text="Reference MTS Model"/>
+
+                                        <table:template>
+
+                                            <Text
+                                                id="referenceMtsModelText"
+                                                text="{referenceMTSModel}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="mtsExShowroomColumn"
+                                        width="150px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'MTO' }">
+
+                                        <Label
+                                            id="mtsExShowroomLabel"
+                                            text="MTS Ex-Showroom"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="mtsExShowroomText"
+                                                number="{mtsExShowroom}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="mtsOnRoadColumn"
+                                        width="130px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'MTO' }">
+
+                                        <Label
+                                            id="mtsOnRoadLabel"
+                                            text="MTS On-Road"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="mtsOnRoadText"
+                                                number="{mtsOnRoad}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="miyExShowroomTotalColumn"
+                                        width="170px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'MTO' }">
+
+                                        <Label
+                                            id="miyExShowroomTotalLabel"
+                                            text="MIY Ex-Showroom Total"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="miyExShowroomTotalText"
+                                                number="{miyExShowroomTotal}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="miyOnRoadTotalColumn"
+                                        width="150px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'MTO' }">
+
+                                        <Label
+                                            id="miyOnRoadTotalLabel"
+                                            text="MIY On-Road Total"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="miyOnRoadTotalText"
+                                                number="{miyOnRoadTotal}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="expectedExShowroomColumn"
+                                        width="170px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'MTO' }">
+
+                                        <Label
+                                            id="expectedExShowroomLabel"
+                                            text="Expected Ex-Showroom"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="expectedExShowroomText"
+                                                number="{expectedExShowroom}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="expectedOnRoadColumn"
+                                        width="150px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'MTO' }">
+
+                                        <Label
+                                            id="expectedOnRoadLabel"
+                                            text="Expected On-Road"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="expectedOnRoadText"
+                                                number="{expectedOnRoad}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="incrementDealerColumn"
+                                        width="130px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'MTO' }">
+
+                                        <Label
+                                            id="incrementDealerLabel"
+                                            text="Increment Dealer"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="incrementDealerText"
+                                                number="{incrementDealer}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <!-- ===================================================== -->
+                                    <!-- GEM                                                   -->
+                                    <!-- ===================================================== -->
+
+                                    <table:Column
+                                        id="lowestMtsExShowroomColumn"
+                                        width="180px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'GEM' }">
+
+                                        <Label
+                                            id="lowestMtsExShowroomLabel"
+                                            text="Lowest MTS Ex-Showroom"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="lowestMtsExShowroomText"
+                                                number="{lowestMtsExShowroom}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="gemDiscountPercentColumn"
+                                        width="130px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'GEM' }">
+
+                                        <Label
+                                            id="gemDiscountPercentLabel"
+                                            text="GeM Discount %"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="gemDiscountPercentText"
+                                                number="{gemDiscountPercent}"
+                                                unit="%"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="gemDiscountAmountColumn"
+                                        width="140px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'GEM' }">
+
+                                        <Label
+                                            id="gemDiscountAmountLabel"
+                                            text="GeM Discount"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="gemDiscountAmountText"
+                                                number="{gemDiscountAmount}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="gemSubTotalColumn"
+                                        width="130px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'GEM' }">
+
+                                        <Label
+                                            id="gemSubTotalLabel"
+                                            text="GeM SubTotal"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="gemSubTotalText"
+                                                number="{gemSubTotal}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="gemBasicColumn"
+                                        width="120px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'GEM' }">
+
+                                        <Label
+                                            id="gemBasicLabel"
+                                            text="GeM Basic"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="gemBasicText"
+                                                number="{gemBasic}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="gemGstAmountColumn"
+                                        width="120px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'GEM' }">
+
+                                        <Label
+                                            id="gemGstAmountLabel"
+                                            text="GeM GST"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="gemGstAmountText"
+                                                number="{gemGstAmount}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="finalGemPriceColumn"
+                                        width="150px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'GEM' }">
+
+                                        <Label
+                                            id="finalGemPriceLabel"
+                                            text="Final GeM Price"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="finalGemPriceText"
+                                                number="{finalGemPrice}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <!-- ===================================================== -->
+                                    <!-- CSD                                                   -->
+                                    <!-- ===================================================== -->
+
+                                    <table:Column
+                                        id="csdNspColumn"
+                                        width="120px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'CSD' }">
+
+                                        <Label
+                                            id="csdNspLabel"
+                                            text="CSD NSP"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="csdNspText"
+                                                number="{csdNsp}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="csdBasicExclHelmetColumn"
+                                        width="180px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'CSD' }">
+
+                                        <Label
+                                            id="csdBasicExclHelmetLabel"
+                                            text="CSD Basic Excl Helmet"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="csdBasicExclHelmetText"
+                                                number="{csdBasicExclHelmet}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="csdDiscountPercentColumn"
+                                        width="130px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'CSD' }">
+
+                                        <Label
+                                            id="csdDiscountPercentLabel"
+                                            text="CSD Discount %"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="csdDiscountPercentText"
+                                                number="{csdDiscountPercent}"
+                                                unit="%"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="csdDiscountAmountColumn"
+                                        width="140px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'CSD' }">
+
+                                        <Label
+                                            id="csdDiscountAmountLabel"
+                                            text="CSD Discount"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="csdDiscountAmountText"
+                                                number="{csdDiscountAmount}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="csdPreTaxNetColumn"
+                                        width="150px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'CSD' }">
+
+                                        <Label
+                                            id="csdPreTaxNetLabel"
+                                            text="CSD Pre-Tax Net"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="csdPreTaxNetText"
+                                                number="{csdPreTaxNet}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="csdGstPercentColumn"
+                                        width="110px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'CSD' }">
+
+                                        <Label
+                                            id="csdGstPercentLabel"
+                                            text="CSD GST %"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="csdGstPercentText"
+                                                number="{csdGstPercent}"
+                                                unit="%"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="csdGstAmountColumn"
+                                        width="110px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'CSD' }">
+
+                                        <Label
+                                            id="csdGstAmountLabel"
+                                            text="CSD GST"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="csdGstAmountText"
+                                                number="{csdGstAmount}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="csdExShowroomColumn"
+                                        width="150px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'CSD' }">
+
+                                        <Label
+                                            id="csdExShowroomLabel"
+                                            text="CSD Ex-Showroom"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="csdExShowroomText"
+                                                number="{csdExShowroom}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="incidentalPercentColumn"
+                                        width="110px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'CSD' }">
+
+                                        <Label
+                                            id="incidentalPercentLabel"
+                                            text="Incidental %"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="incidentalPercentText"
+                                                number="{incidentalPercent}"
+                                                unit="%"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="incidentalChargesColumn"
+                                        width="140px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'CSD' }">
+
+                                        <Label
+                                            id="incidentalChargesLabel"
+                                            text="Incidental Charges"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="incidentalChargesText"
+                                                number="{incidentalCharges}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="csdRtoAmountColumn"
+                                        width="120px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'CSD' }">
+
+                                        <Label
+                                            id="csdRtoAmountLabel"
+                                            text="RTO Amount"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="csdRtoAmountText"
+                                                number="{rtoAmount}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="csdRtoWithBillColumn"
+                                        width="130px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'CSD' }">
+
+                                        <Label
+                                            id="csdRtoWithBillLabel"
+                                            text="RTO With Bill"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="csdRtoWithBillText"
+                                                number="{rtoWithBill}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="csdTotalInsuranceColumn"
+                                        width="140px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'CSD' }">
+
+                                        <Label
+                                            id="csdTotalInsuranceLabel"
+                                            text="Total Insurance"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="csdTotalInsuranceText"
+                                                number="{totalInsurance}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="finalCsdPriceColumn"
+                                        width="150px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'CSD' }">
+
+                                        <Label
+                                            id="finalCsdPriceLabel"
+                                            text="Final CSD Price"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="finalCsdPriceText"
+                                                number="{finalCsdPrice}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <table:Column
+                                        id="csdOnRoadColumn"
+                                        width="130px"
+                                        hAlign="End"
+                                        visible="{= ${viewModel>/orderType} === 'CSD' }">
+
+                                        <Label
+                                            id="csdOnRoadLabel"
+                                            text="CSD On-Road"/>
+
+                                        <table:template>
+
+                                            <ObjectNumber
+                                                id="csdOnRoadText"
+                                                number="{csdOnRoad}"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+
+                                    <!-- ===================================================== -->
+                                    <!-- STATUS                                                -->
+                                    <!-- ===================================================== -->
+
+                                    <table:Column
+                                        id="pricingStatusColumn"
+                                        width="120px">
+
+                                        <Label
+                                            id="statusLabel"
+                                            text="Status"/>
+
+                                        <table:template>
+
+                                            <ObjectStatus
+                                                id="pricingStatus"
+                                                text="{status}"
+                                                state="{= ${status} === 'APPROVED'
+                                                    ? 'Success'
+                                                    : ${status} === 'REJECTED'
+                                                    ? 'Error'
+                                                    : ${status} === 'SUBMITTED'
+                                                    ? 'Warning'
+                                                    : 'Information' }"/>
+
+                                        </table:template>
+
+                                    </table:Column>
+
+                                </table:Table>
+							</uxap:blocks>
+						</uxap:ObjectPageSubSection>
+					</uxap:subSections>
+				</uxap:ObjectPageSection>
+			</uxap:sections>
+		</uxap:ObjectPageLayout>
+	</Page>
 </mvc:View>

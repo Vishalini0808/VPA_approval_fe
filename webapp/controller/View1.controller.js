@@ -3,7 +3,7 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageToast"
-], function (Controller,Filter,FilterOperator,MessageToast) {
+], function (Controller, Filter, FilterOperator, MessageToast) {
 
     "use strict";
 
@@ -17,38 +17,38 @@ sap.ui.define([
 
             var oView = this.getView();
 
-            console.log('oView..........',oView)
+            console.log('oView..........', oView)
 
             var sReferenceNumber = oView.byId("referenceNumberInput").getValue().trim();
 
-            console.log('referencenumber value',sReferenceNumber)
+            console.log('referencenumber value', sReferenceNumber)
 
             var sSubmitterEmail = oView.byId("submitterInput").getValue().trim();
 
-            console.log("submitteremail",sSubmitterEmail);
+            console.log("submitteremail", sSubmitterEmail);
 
-            var sStatus = oView .byId("statusSelect").getSelectedKey();
+            var sStatus = oView.byId("statusSelect").getSelectedKey();
 
-            console.log('selected key value',sStatus)
+            console.log('selected key value', sStatus)
 
             var aFilters = [];
-            
+
             if (sReferenceNumber) {
-                aFilters.push( new Filter("referenceNumber",FilterOperator.Contains,sReferenceNumber));
+                aFilters.push(new Filter("referenceNumber", FilterOperator.Contains, sReferenceNumber));
             }
 
-       
-            if (sSubmitterEmail) {  
-                
-                aFilters.push(new Filter( "submitterEmail",FilterOperator.Contains,sSubmitterEmail));
+
+            if (sSubmitterEmail) {
+
+                aFilters.push(new Filter("submitterEmail", FilterOperator.Contains, sSubmitterEmail));
             }
 
-        
+
             if (sStatus && sStatus !== "ALL") {
 
-                aFilters.push( new Filter("status",FilterOperator.EQ,sStatus));
+                aFilters.push(new Filter("status", FilterOperator.EQ, sStatus));
             }
-            
+
             var oTable = oView.byId("submissionTable");
             var oBinding = oTable.getBinding("items");
 
@@ -58,7 +58,7 @@ sap.ui.define([
                 return;
             }
 
-    
+
             oBinding.filter(aFilters);
 
             console.log("Reference Number:", sReferenceNumber);
@@ -77,20 +77,20 @@ sap.ui.define([
 
             var oView = this.getView();
 
-      
+
             oView.byId("referenceNumberInput").setValue("");
 
-      
+
             oView.byId("submitterInput").setValue("");
 
-   
+
             oView.byId("statusSelect").setSelectedKey("ALL");
 
-      
+
             var oTable = oView.byId("submissionTable");
             var oBinding = oTable.getBinding("items");
 
-            console.log('oBinding values',oBinding)
+            console.log('oBinding values', oBinding)
 
             if (oBinding) {
                 oBinding.filter([]);
@@ -119,45 +119,45 @@ sap.ui.define([
         },
 
 
-  onItemPress: function (oEvent) {
+        onItemPress: function (oEvent) {
 
-    var oSource = oEvent.getSource();
-    console.log('getsource value',oSource)
-    var oContext = oSource.getBindingContext();
+            var oSource = oEvent.getSource();
+            console.log('getsource value', oSource)
+            var oContext = oSource.getBindingContext();
 
-    console.log('bindingcontext value',oContext);
+            console.log('bindingcontext value', oContext);
 
-    if (!oContext) {
-        console.error("Binding context not found");
-        MessageToast.show("Unable to get submission data");
-        return;
-    }
+            if (!oContext) {
+                console.error("Binding context not found");
+                MessageToast.show("Unable to get submission data");
+                return;
+            }
 
-    var oData = oContext.getObject();
+            var oData = oContext.getObject();
 
-    console.log("Selected submission:", oData);
+            console.log("Selected submission:", oData);
 
-    var sID = oData.ID;
+            var sID = oData.ID;
 
-    console.log("Selected ID:", sID);
+            console.log("Selected ID:", sID);
 
-    if (!sID) {
-        MessageToast.show("Submission ID not found");
-        return;
-    }
+            if (!sID) {
+                MessageToast.show("Submission ID not found");
+                return;
+            }
 
-    this.getOwnerComponent().getRouter().navTo("RouteObjectPage", { ID: sID });
-}
-,
+            this.getOwnerComponent().getRouter().navTo("RouteObjectPage", { ID: sID });
+        }
+        ,
         onSelectionChange: function (oEvent) {
 
             var oTable = this.getView().byId("submissionTable");
 
             var aSelectedItems = oTable.getSelectedItems();
 
-            console.log(   " SELECTION CHANGED");
+            console.log(" SELECTION CHANGED");
 
-            console.log("Selected item count:",aSelectedItems.length);
+            console.log("Selected item count:", aSelectedItems.length);
 
             aSelectedItems.forEach(function (oItem) {
 
@@ -167,13 +167,13 @@ sap.ui.define([
 
                     var oData = oContext.getObject();
 
-                    console.log( "Selected submission:",oData);
+                    console.log("Selected submission:", oData);
                 }
 
             });
 
             if (aSelectedItems.length > 0) {
-                MessageToast.show(aSelectedItems.length +" submission(s) selected");
+                MessageToast.show(aSelectedItems.length + " submission(s) selected");
             }
         },
 
@@ -181,7 +181,7 @@ sap.ui.define([
 
             console.log(" BACK BUTTON CLICKED ");
 
-            this.getOwnerComponent()  .getRouter().navTo("RouteView1");
+            this.getOwnerComponent().getRouter().navTo("RouteView1");
         }
 
     });

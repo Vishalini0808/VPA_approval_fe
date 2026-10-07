@@ -5,14 +5,14 @@
     xmlns:core="sap.ui.core"
     displayBlock="true">
 
-    <Page  id="approvalDashboardPage" title="Approval Dashboard"  showNavButton="true"  navButtonPress=".onNavBack">
+    <Page  id="approvalDashboardPage" title="Approval Dashboard" class="approvalDashboardPage">
 
         <content>
-
-            <VBox id="vboxs" width="100%"  class="sapUiSmallMargin">
-
+            <VBox id="vboxs"
+                width="auto"
+                class="sapUiSmallMargin">
              
-                <Panel id="filterPanel" headerText="Filters" expandable="true"  expanded="true" class="sapUiSmallMarginBottom">
+                <Panel id="filterPanel" headerText="Filters" expandable="true"  expanded="true" class="sapUiSmallMarginBottom approvalFilterPanel ">
 
                     <content>
 
@@ -70,93 +70,92 @@
 
                 </Panel>
 
-
+                <Panel id="submissionPanel" class="approvalResultsPanel">
              
-                <Toolbar id="toolbar">
+                    <Toolbar id="toolbar">
 
-                    <Title id="submission"    text="{='Submission Requests ('+${/Submissions/$count} +')'}"   level="H2"/>
+                        <Title id="submission"    text="{='Submission Requests ('+${/Submissions/$count} +')'}"   level="H2"/>
 
-                    <ToolbarSpacer id="toolspacer"/>
+                        <ToolbarSpacer id="toolspacer"/>
 
-                    <Button id="refreshButton" text="Refresh" icon="sap-icon://refresh" type="Transparent"  press=".onRefresh"/>
+                        <Button id="refreshButton" text="Refresh" icon="sap-icon://refresh" type="Transparent"  press=".onRefresh" />
 
-                </Toolbar>
+                    </Toolbar>
 
+            
+                    <Table id="submissionTable"  width="100%"  inset="false" mode="MultiSelect" growing="true" growingThreshold="20" growingScrollToLoad="true"  noDataText="No submissions found"
+                        items="{
+                            path: '/Submissions'
+                        }"
+                        selectionChange=".onSelectionChange"
+                        class="approvalSubmissionTable">
 
-          
-                <Table id="submissionTable"  width="100%"  inset="false" mode="MultiSelect" growing="true" growingThreshold="20" growingScrollToLoad="true"  noDataText="No submissions found"
-                    items="{
-                        path: '/Submissions'
-                    }"
-                    selectionChange=".onSelectionChange">
+                        <columns>
 
-                    <columns>
+                    
+                            <Column id="cloumn"  width="160px">
 
-                   
-                        <Column id="cloumn"  width="160px">
+                                <Text id="reference"   text="Reference Number"/>
 
-                            <Text id="reference"   text="Reference Number"/>
-
-                        </Column>
-
-
-                        <Column id="cloumns" width="300px">
-
-                            <Text id="comment" text="Comments"/>
-
-                        </Column>
+                            </Column>
 
 
-                     
-                        <Column id="email"  width="160px">
+                            <Column id="cloumns" width="300px">
 
-                            <Text id="submitteremails" text="Submitter Email"/>
+                                <Text id="comment" text="Comments"/>
 
-                        </Column>
-
-
-                        <Column id="center" width="130px" hAlign="Center">
-
-                            <Text id="status" text="Status"/>
-
-                        </Column>
-
-                    </columns>
+                            </Column>
 
 
-                    <items>
+                        
+                            <Column id="email"  width="160px">
 
-                        <ColumnListItem id="navigation" type="Navigation"  press=".onItemPress">
+                                <Text id="submitteremails" text="Submitter Email"/>
 
-                            <cells>
-
-                             
-                                <Text id="referencenumber" text="{referenceNumber}" wrapping="false"/>
+                            </Column>
 
 
-                             
-                                <Text id="comments" text="{comments}" wrapping="true" maxLines="2"/>
+                            <Column id="center" width="130px" hAlign="Center">
+
+                                <Text id="status" text="Status"/>
+
+                            </Column>
+
+                        </columns>
 
 
-                             
-                                <Text id="emails"  text="{submitterEmail}"   wrapping="false"/>
+                        <items>
+
+                            <ColumnListItem id="navigation" type="Navigation"  press=".onItemPress">
+
+                                <cells>
+
+                                
+                                    <Text id="referencenumber" text="{referenceNumber}" wrapping="false"/>
 
 
-                         
-                                <ObjectStatus id="objectstatus"
-                                    text="{= ${status} === 'SUBMITTED' ? 'Submitted' : ${status} === 'APPROVED' ? 'Approved' : ${status} === 'REJECTED' ? 'Rejected' : ${status} }"
-                                    state="{= ${status} === 'SUBMITTED' ? 'Information' : ${status} === 'APPROVED' ? 'Success' : ${status} === 'REJECTED' ? 'Error' : 'None' }"/>
+                                
+                                    <Text id="comments" text="{comments}" wrapping="true" maxLines="2"/>
 
-                            </cells>
 
-                        </ColumnListItem>
+                                
+                                    <Text id="emails"  text="{submitterEmail}"   wrapping="false"/>
 
-                    </items>
 
-                </Table>
+                            
+                                    <ObjectStatus id="objectstatus"
+                                        text="{= ${status} === 'SUBMITTED' ? 'Submitted' : ${status} === 'APPROVED' ? 'Approved' : ${status} === 'REJECTED' ? 'Rejected' : ${status} }"
+                                        state="{= ${status} === 'SUBMITTED' ? 'Information' : ${status} === 'APPROVED' ? 'Success' : ${status} === 'REJECTED' ? 'Error' : 'None' }"/>
 
+                                </cells>
+
+                            </ColumnListItem>
+
+                        </items>
+
+                    </Table>
+                </Panel>
             </VBox>
-
         </content>
 
     </Page>

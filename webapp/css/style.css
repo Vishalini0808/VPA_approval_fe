@@ -1,1 +1,580 @@
-/* Enter your custom styles here */
+/* =========================
+   APPROVAL DASHBOARD PAGE
+   ========================= */
+
+.approvalDashboardPage,
+.approvalDashboardPage .sapMPageEnableScrolling,
+.approvalDashboardPage .sapMPageBgStandard {
+
+    background: linear-gradient(
+        135deg,
+        #F5F9FC 0%,
+        #E8F1F8 50%,
+        #D9EAF5 100%
+    ) !important;
+
+}
+
+
+/* =========================
+   PAGE HEADER
+   ========================= */
+
+.approvalDashboardPage .sapMPageHeader {
+
+    background-color: #063970 !important;
+
+    border-bottom: 2px solid #063970 !important;
+
+    box-shadow:
+        0 0.125rem 0.5rem rgba(6, 57, 112, 0.20) !important;
+
+}
+
+
+.approvalDashboardPage .sapMPageHeader .sapMBar {
+
+    background-color: #063970 !important;
+
+    height: 40px !important;
+
+    min-height: 40px !important;
+
+}
+
+
+/* Page title */
+
+.approvalDashboardPage .sapMPageHeader .sapMTitle {
+
+    color: #FFFFFF !important;
+
+    font-weight: 700 !important;
+
+}
+
+
+/* Navigation icon */
+
+.approvalDashboardPage .sapMPageHeader .sapMBtnIcon {
+
+    color: #FFFFFF !important;
+
+}
+
+
+/* =========================
+   PAGE CONTENT
+   ========================= */
+
+.approvalDashboardPage > .sapMPageCont {
+
+    background: transparent !important;
+
+}
+
+
+/* =========================
+   FILTER PANEL
+   ========================= */
+
+.approvalFilterPanel {
+
+    background-color: #FFFFFF !important;
+
+    border: 1px solid #D9D9D9 !important;
+
+    border-radius: 0.5rem !important;
+
+    box-shadow:
+        0 0.125rem 0.25rem rgba(0, 0, 0, 0.08) !important;
+
+}
+
+
+/* Filter header */
+
+.approvalFilterPanel .sapMPanelWrappingDivTb {
+
+    background-color: #F5F9FC !important;
+
+    border-bottom: 2px solid #063970 !important;
+
+}
+
+
+/* Filter header title */
+
+.approvalFilterPanel .sapMPanelWrappingDivTb .sapMTitle {
+
+    color: #063970 !important;
+
+    font-weight: 600 !important;
+
+}
+
+
+/* Filter header icon */
+
+.approvalFilterPanel .sapMPanelWrappingDivTb .sapUiIcon {
+
+    color: #063970 !important;
+
+}
+
+
+/* Filter content */
+
+.approvalFilterPanel .sapMPanelContent {
+
+    background-color: #FFFFFF !important;
+
+}
+
+
+/* =========================
+   FILTER LABELS
+   ========================= */
+
+.approvalFilterPanel .sapMLabel {
+
+    color: #32363A !important;
+
+    font-weight: 600 !important;
+
+}
+
+
+/* =========================
+   FILTER INPUTS
+   ========================= */
+
+.approvalFilterPanel .sapMInputBaseInner {
+
+    border-radius: 0.3rem !important;
+
+}
+
+
+/* =========================
+   FILTER SELECT
+   ========================= */
+
+.approvalFilterPanel .sapMSlt {
+
+    border-radius: 0.3rem !important;
+
+}
+
+
+
+/* =========================
+   SUBMISSION RESULTS PANEL
+   ========================= */
+
+.approvalResultsPanel {
+
+    background-color: #FFFFFF !important;
+
+    border: 1px solid #D9D9D9 !important;
+
+    border-radius: 0.5rem !important;
+
+    box-shadow:
+        0 0.125rem 0.25rem rgba(0, 0, 0, 0.08) !important;
+
+}
+
+
+/* =========================
+   SUBMISSION TOOLBAR
+   ========================= */
+
+.approvalResultsToolbar {
+
+    background-color: #F5F9FC !important;
+
+    border-bottom: 2px solid #063970 !important;
+
+}
+
+
+/* Submission title */
+
+.approvalResultsToolbar .sapMTitle {
+
+    color: #063970 !important;
+
+    font-weight: 600 !important;
+
+}
+
+
+/* =========================
+   REFRESH BUTTON
+   ========================= */
+
+.approvalRefreshButton .sapMBtnIcon,
+.approvalRefreshButton .sapMBtnContent {
+
+    color: #063970 !important;
+
+}
+
+
+/* =========================
+   SUBMISSION TABLE
+   ========================= */
+
+.approvalSubmissionTable {
+
+    background-color: #FFFFFF !important;
+
+    border: 1px solid #D9D9D9 !important;
+
+}
+
+
+/* =========================
+   TABLE HEADER
+   ========================= */
+
+.approvalSubmissionTable .sapMListTblHeader {
+
+    background-color: #E8F1F8 !important;
+
+}
+
+
+.approvalSubmissionTable .sapMListTblHeaderCell {
+
+    background-color: #E8F1F8 !important;
+
+    border-bottom: 2px solid #063970 !important;
+
+}
+
+
+/* Header text */
+
+.approvalSubmissionTable .sapMListTblHeaderCell .sapMText {
+
+    color: #063970 !important;
+
+    font-weight: 600 !important;
+
+}
+
+
+/* =========================
+   TABLE ROWS
+   ========================= */
+
+.approvalSubmissionTable .sapMListTblRow {
+
+    background-color: #FFFFFF !important;
+
+}
+
+
+/* Alternate rows */
+
+.approvalSubmissionTable .sapMListTblRow:nth-child(even) {
+
+    background-color: #F7FAFC !important;
+
+}
+
+
+/* =========================
+   TABLE CELLS
+   ========================= */
+
+.approvalSubmissionTable .sapMListTblCell {
+
+    border-bottom: 1px solid #E5E7E7 !important;
+
+}
+
+
+/* Normal text */
+
+.approvalSubmissionTable .sapMText {
+
+    color: #32363A !important;
+
+}
+
+
+/* =========================
+   ROW HOVER
+   ========================= */
+
+.approvalSubmissionTable .sapMListTblRow:hover {
+
+    background-color: #E8F1F8 !important;
+
+}
+
+
+/* =========================
+   SELECTED ROW
+   ========================= */
+
+.approvalSubmissionTable .sapMLIBSelected {
+
+    background-color: #E1ECF5 !important;
+
+}
+
+
+/* =========================
+   NAVIGATION ARROW
+   ========================= */
+
+.approvalSubmissionTable .sapMLIBType {
+
+    color: #063970 !important;
+
+}
+
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 1000px) {
+
+    .approvalDashboardPage .sapUiSmallMargin {
+
+        margin: 10px !important;
+
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .approvalFilterPanel,
+    .approvalResultsPanel {
+
+        border-radius: 0.4rem !important;
+
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+/* =========================================================
+   PRICING RESULTS TABLE
+   ========================================================= */
+
+.pricingResultsTable {
+
+    background-color: #FFFFFF !important;
+
+    border: 1px solid #D9D9D9 !important;
+
+}
+
+
+/* =========================================================
+   TABLE HEADER
+   ========================================================= */
+
+.pricingResultsTable .sapUiTableColHdr,
+.pricingResultsTable .sapUiTableColHdrCnt,
+.pricingResultsTable .sapUiTableColHdrScr,
+.pricingResultsTable .sapUiTableColHdrTr,
+.pricingResultsTable .sapUiTableCol {
+
+    background-color: #E8F1F8 !important;
+
+}
+
+
+/* Header bottom border */
+
+.pricingResultsTable .sapUiTableCol {
+
+    border-bottom: 2px solid #063970 !important;
+
+}
+
+
+/* Header cell */
+
+.pricingResultsTable .sapUiTableColCell {
+
+    background-color: #E8F1F8 !important;
+
+}
+
+
+/* Header text */
+
+.pricingResultsTable .sapUiTableColCell .sapMLabel,
+.pricingResultsTable .sapUiTableColCell .sapMText {
+
+    color: #063970 !important;
+
+    font-weight: 600 !important;
+
+}
+
+
+/* =========================================================
+   TABLE BODY
+   ========================================================= */
+
+.pricingResultsTable .sapUiTableCtrl {
+
+    background-color: #FFFFFF !important;
+
+}
+
+
+/* Normal rows */
+
+.pricingResultsTable .sapUiTableTr {
+
+    background-color: #FFFFFF !important;
+
+}
+
+
+/* Alternate rows */
+
+.pricingResultsTable .sapUiTableCtrl
+.sapUiTableTr:nth-child(even) {
+
+    background-color: #F7FAFC !important;
+
+}
+
+
+/* =========================================================
+   TABLE CELLS
+   ========================================================= */
+
+.pricingResultsTable .sapUiTableCell {
+
+    background-color: inherit !important;
+
+    border-bottom: 1px solid #E5E7E7 !important;
+
+    border-right: 1px solid #E5E7E7 !important;
+
+}
+
+
+/* Cell text */
+
+.pricingResultsTable .sapUiTableCell .sapMText {
+
+    color: #32363A !important;
+
+}
+
+
+/* =========================================================
+   ROW HOVER
+   ========================================================= */
+
+.pricingResultsTable .sapUiTableTr:hover {
+
+    background-color: #E8F1F8 !important;
+
+}
+
+
+.pricingResultsTable .sapUiTableTr:hover
+.sapUiTableCell {
+
+    background-color: #E8F1F8 !important;
+
+}
+
+
+/* =========================================================
+   TABLE OUTER BORDERS
+   ========================================================= */
+
+.pricingResultsTable .sapUiTableCtrlScr,
+.pricingResultsTable .sapUiTableCCnt {
+
+    background-color: #FFFFFF !important;
+
+}
+
+
+/* =========================================================
+   ROW HEADER / SELECTOR AREA
+   ========================================================= */
+
+.pricingResultsTable .sapUiTableRowHdr,
+.pricingResultsTable .sapUiTableRowAction {
+
+    background-color: #FFFFFF !important;
+
+    border-right: 1px solid #E5E7E7 !important;
+
+}
+
+
+/* =========================================================
+   SCROLLBAR AREA
+   ========================================================= */
+
+.pricingResultsTable .sapUiTableVSb,
+.pricingResultsTable .sapUiTableHSb {
+
+    background-color: #F5F9FC !important;
+
+}
+
+
+/* =========================================================
+   COLUMN RESIZE / SEPARATOR
+   ========================================================= */
+
+.pricingResultsTable .sapUiTableColRsz {
+
+    background-color: #063970 !important;
+
+}
+
+
+/* =========================================================
+   EMPTY TABLE AREA
+   ========================================================= */
+
+.pricingResultsTable .sapUiTableEmpty {
+
+    background-color: #FFFFFF !important;
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .pricingResultsTable {
+
+        border-radius: 0.4rem !important;
+
+    }
+
+}
