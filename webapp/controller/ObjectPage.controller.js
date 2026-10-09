@@ -196,7 +196,7 @@ sap.ui.define([
 
             if (oData.status !== "SUBMITTED") {
 
-                MessageBox.confirm("Only submitted requests can be approved.");
+                MessageToast.show("Only submitted requests can be approved.");
 
                 return;
             }
@@ -225,18 +225,16 @@ sap.ui.define([
 
                         oOperation.setParameter("referenceNumber", sReferenceNumber);
 
-                        oOperation.execute().then(function (oResult) {
+                        oOperation.execute().then(function () {
 
-                            console.log("approvePricing response:", oResult);
-
-                            MessageBox.confirm("Submission approved successfully");
+                            MessageToast.show("Submission approved successfully");
 
                             this.byId("approveButton").setVisible(false);
                             this.byId("rejectButton").setVisible(false);
 
                             oContext.requestRefresh();
 
-                        }).catch(function (oError) {
+                        }.bind(this)).catch(function (oError) {
 
                             console.error("approvePricing failed:", oError);
 
@@ -270,7 +268,7 @@ sap.ui.define([
 
             if (oData.status !== "SUBMITTED") {
 
-                MessageBox.confirm("Only submitted requests can be rejected.");
+                MessageToast.show("Only submitted requests can be rejected.");
 
                 return;
             }
@@ -317,7 +315,7 @@ sap.ui.define([
 
                         oContext.requestRefresh();
 
-                    }).catch(function (oError) {
+                    }.bind(this)).catch(function (oError) {
 
                         console.error("rejectPricing failed:", oError);
 
