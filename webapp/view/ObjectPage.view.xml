@@ -731,7 +731,7 @@
 
                                             <Text
                                                 id="referenceMtsModelText"
-                                                text="{referenceMTSModel}"/>
+                                                text="{referenceMTSModel_modelCode}"/>
 
                                         </table:template>
 
