@@ -107,7 +107,7 @@
                                             id="detailsReferenceNumber"
                                             text="{referenceNumber}"/>
 										</VBox>
-										<VBox
+										<!-- <VBox
                                         id="detailsSubmitterColumn">
 											<Label
                                             id="detailsSubmitterLabel"
@@ -115,7 +115,7 @@
 											<Text
                                             id="detailsSubmitterEmail"
                                             text="{submitterEmail}"/>
-										</VBox>
+										</VBox> -->
 										<VBox
                                         id="detailsStatusColumn">
 											<Label
