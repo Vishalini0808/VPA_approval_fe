@@ -28,13 +28,13 @@
                             </VBox>
 
 
-                            <VBox id="Vbox" class="sapUiSmallMarginEnd">
+                            <!-- <VBox id="Vbox" class="sapUiSmallMarginEnd">
 
                                 <Label id="submitteremail"  text="Submitter Email"/>
 
                                 <Input  id="submitterInput" width="200px" placeholder="Enter Submitter Email"/>
 
-                            </VBox>
+                            </VBox> -->
 
 
                          
@@ -108,11 +108,11 @@
 
 
                         
-                            <Column id="email"  width="160px">
+                            <!-- <Column id="email"  width="160px">
 
                                 <Text id="submitteremails" text="Submitter Email"/>
 
-                            </Column>
+                            </Column> -->
 
 
                             <Column id="center" width="130px" hAlign="Center">
@@ -139,7 +139,7 @@
 
 
                                 
-                                    <Text id="emails"  text="{submitterEmail}"   wrapping="false"/>
+                                    <!-- <Text id="emails"  text="{submitterEmail}"   wrapping="false"/> -->
 
 
                             
